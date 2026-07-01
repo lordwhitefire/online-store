@@ -1,0 +1,1182 @@
+     1→     1→# WebForge Agent Registry
+     2→     2→
+     3→     3→## Executive Layer
+     4→     4→
+     5→     5→| Agent | Role | Function | Department |
+     6→     6→|---|---|---|---|
+     7→     7→| **CEO** | Chief Executive Officer | Oversees all four departments, coordinates strategy, makes final decisions | Executive |
+     8→     8→| **Hermes** | COO / Scheduler | Automaton, wakes agents in sequence, manages handovers, monitors stalls | Executive |
+     9→     9→
+    10→    10→---
+    11→    11→
+    12→    12→## Department 1 — INTELLIGENCE TEAM (38 agents)
+    13→    13→
+    14→    14→### Probe Team — Lead, Assets & Readiness (17 agents)
+    15→    15→| Agent | Areas | Function |
+    16→    16→|---|---|---|
+    17→    17→| **Probe-Orion** | 01–05 | Assets & readiness assessment for areas 1-5 |
+    18→    18→| **Probe-Wren** | 06–10 | Assets & readiness assessment for areas 6-10 |
+    19→    19→| **Probe-Beacon** | 11–15 | Assets & readiness assessment for areas 11-15 |
+    20→    20→| **Probe-Sable** | 16–20 | Assets & readiness assessment for areas 16-20 |
+    21→    21→| **Probe-Quartz** | 21–25 | Assets & readiness assessment for areas 21-25 |
+    22→    22→| **Probe-Flint** | 26–30 | Assets & readiness assessment for areas 26-30 |
+    23→    23→| **Probe-Ridge** | 31–35 | Assets & readiness assessment for areas 31-35 |
+    24→    24→| **Probe-Marsh** | 36–40 | Assets & readiness assessment for areas 36-40 |
+    25→    25→| **Probe-Coral** | 41–45 | Assets & readiness assessment for areas 41-45 |
+    26→    26→| **Probe-Vale** | 46–50 | Assets & readiness assessment for areas 46-50 |
+    27→    27→| **Probe-Thorne** | 51–55 | Assets & readiness assessment for areas 51-55 |
+    28→    28→| **Probe-Brisk** | 56–60 | Assets & readiness assessment for areas 56-60 |
+    29→    29→| **Probe-Hollow** | 61–65 | Assets & readiness assessment for areas 61-65 |
+    30→    30→| **Probe-Crag** | 66–70 | Assets & readiness assessment for areas 66-70 |
+    31→    31→| **Probe-Drift** | 71–75 | Assets & readiness assessment for areas 71-75 |
+    32→    32→| **Probe-Ember** | 76–80 | Assets & readiness assessment for areas 76-80 |
+    33→    33→| **Probe-Lyric** | 81–82 | Assets & readiness assessment for areas 81-82 |
+    34→    34→
+    35→    35→### Odin Team — Lead, Standards Research & Selection (17 agents)
+    36→    36→| Agent | Areas | Function |
+    37→    37→|---|---|---|
+    38→    38→| **Odin-Sage** | 01–05 | Standards research & selection for areas 1-5 |
+    39→    39→| **Odin-Reed** | 06–10 | Standards research & selection for areas 6-10 |
+    40→    40→| **Odin-Birch** | 11–15 | Standards research & selection for areas 11-15 |
+    41→    41→| **Odin-Cliff** | 16–20 | Standards research & selection for areas 16-20 |
+    42→    42→| **Odin-Moss** | 21–25 | Standards research & selection for areas 21-25 |
+    43→    43→| **Odin-Slate** | 26–30 | Standards research & selection for areas 26-30 |
+    44→    44→| **Odin-Fern** | 31–35 | Standards research & selection for areas 31-35 |
+    45→    45→| **Odin-Pike** | 36–40 | Standards research & selection for areas 36-40 |
+    46→    46→| **Odin-Wisp** | 41–45 | Standards research & selection for areas 41-45 |
+    47→    47→| **Odin-Cove** | 46–50 | Standards research & selection for areas 46-50 |
+    48→    48→| **Odin-Bramble** | 51–55 | Standards research & selection for areas 51-55 |
+    49→    49→| **Odin-Talon** | 56–60 | Standards research & selection for areas 56-60 |
+    50→    50→| **Odin-Marrow** | 61–65 | Standards research & selection for areas 61-65 |
+    51→    51→| **Odin-Glade** | 66–70 | Standards research & selection for areas 66-70 |
+    52→    52→| **Odin-Heron** | 71–75 | Standards research & selection for areas 71-75 |
+    53→    53→| **Odin-Frost** | 76–80 | Standards research & selection for areas 76-80 |
+    54→    54→| **Odin-Aster** | 81–82 | Standards research & selection for areas 81-82 |
+    55→    55→
+    56→    56→### Dorian — UI Researcher (1 agent)
+    57→    57→| Agent | Areas | Function |
+    58→    58→|---|---|---|
+    59→    59→| **Dorian** | Design-relevant areas | UI research, internet reference design search, reports findings to Aurora |
+    60→    60→
+    61→    61→---
+    62→    62→
+    63→    63→## Department 2 — BUILD TEAM (69 agents)
+    64→    64→
+    65→    65→### Frontend — under Aurora (22 agents)
+    66→    66→| Agent | Role | Function |
+    67→    67→|---|---|---|
+    68→    68→| **Lead-Faro** | Tech Lead | Manages all 4 Senior Developers, reports to Aurora |
+    69→    69→| **Sr-Hale** | Senior Developer | Manages Jr-Hawk, Jr-Finch, Jr-Wisp, Jr-Cole, Jr-Reed |
+    70→    70→| **Sr-Vance** | Senior Developer | Manages Jr-Sage, Jr-Birch, Jr-Pike, Jr-Moss |
+    71→    71→| **Sr-Brook** | Senior Developer | Manages Jr-Cliff, Jr-Fern, Jr-Slate, Jr-Wren |
+    72→    72→| **Sr-Quill2** | Senior Developer | Manages Jr-Cove, Jr-Bram, Jr-Talon, Jr-Aster |
+    73→    73→| **Jr-Hawk** | Junior Developer | Frontend development for areas 1-5 |
+    74→    74→| **Jr-Finch** | Junior Developer | Frontend development for areas 6-10 |
+    75→    75→| **Jr-Wisp** | Junior Developer | Frontend development for areas 11-15 |
+    76→    76→| **Jr-Cole** | Junior Developer | Frontend development for areas 16-20 |
+    77→    77→| **Jr-Reed** | Junior Developer | Frontend development for areas 21-25 |
+    78→    78→| **Jr-Sage** | Junior Developer | Frontend development for areas 26-30 |
+    79→    79→| **Jr-Birch** | Junior Developer | Frontend development for areas 31-35 |
+    80→    80→| **Jr-Pike** | Junior Developer | Frontend development for areas 36-40 |
+    81→    81→| **Jr-Moss** | Junior Developer | Frontend development for areas 41-45 |
+    82→    82→| **Jr-Cliff** | Junior Developer | Frontend development for areas 46-50 |
+    83→    83→| **Jr-Fern** | Junior Developer | Frontend development for areas 51-55 |
+    84→    84→| **Jr-Slate** | Junior Developer | Frontend development for areas 56-60 |
+    85→    85→| **Jr-Wren** | Junior Developer | Frontend development for areas 61-65 |
+    86→    86→| **Jr-Cove** | Junior Developer | Frontend development for areas 66-70 |
+    87→    87→| **Jr-Bram** | Junior Developer | Frontend development for areas 71-75 |
+    88→    88→| **Jr-Talon** | Junior Developer | Frontend development for areas 76-80 |
+    89→    89→| **Jr-Aster** | Junior Developer | Frontend development for areas 81-82 |
+    90→    90→
+    91→    91→### Backend — under Titan (22 agents)
+    92→    92→| Agent | Role | Function |
+    93→    93→|---|---|---|
+    94→    94→| **Lead-Terra** | Tech Lead | Manages all 4 Senior Developers, reports to Titan |
+    95→    95→| **Sr-Stone** | Senior Developer | Manages Jr-Granite, Jr-Slate, Jr-Marble, Jr-Quartz |
+    96→    96→| **Sr-Iron** | Senior Developer | Manages Jr-Copper, Jr-Bronze, Jr-Silver, Jr-Gold |
+    97→    97→| **Sr-Wood** | Senior Developer | Manages Jr-Oak, Jr-Pine, Jr-Cedar, Jr-Birch |
+    98→    98→| **Sr-Steel** | Senior Developer | Manages Jr-Titan, Jr-Vanadium, Jr-Chromium, Jr-Nickel |
+    99→    99→| **Jr-Granite** | Junior Developer | Backend development for areas 1-5 |
+   100→   100→| **Jr-Slate** | Junior Developer | Backend development for areas 6-10 |
+   101→   101→| **Jr-Marble** | Junior Developer | Backend development for areas 11-15 |
+   102→   102→| **Jr-Quartz** | Junior Developer | Backend development for areas 16-20 |
+   103→   103→| **Jr-Copper** | Junior Developer | Backend development for areas 21-25 |
+   104→   104→| **Jr-Bronze** | Junior Developer | Backend development for areas 26-30 |
+   105→   105→| **Jr-Silver** | Junior Developer | Backend development for areas 31-35 |
+   106→   106→| **Jr-Gold** | Junior Developer | Backend development for areas 36-40 |
+   107→   107→| **Jr-Oak** | Junior Developer | Backend development for areas 41-45 |
+   108→   108→| **Jr-Pine** | Junior Developer | Backend development for areas 46-50 |
+   109→   109→| **Jr-Cedar** | Junior Developer | Backend development for areas 51-55 |
+   110→   110→| **Jr-Birch** | Junior Developer | Backend development for areas 56-60 |
+   111→   111→| **Jr-Titan** | Junior Developer | Backend development for areas 61-65 |
+   112→   112→| **Jr-Vanadium** | Junior Developer | Backend development for areas 66-70 |
+   113→   113→| **Jr-Chromium** | Junior Developer | Backend development for areas 71-75 |
+   114→   114→| **Jr-Nickel** | Junior Developer | Backend development for areas 76-80 |
+   115→   115→| **Jr-Cobalt** | Junior Developer | Backend development for areas 81-82 |
+   116→   116→
+   117→   117→### Database/Infra — under Zephyr (22 agents)
+   118→   118→| Agent | Role | Function |
+   119→   119→|---|---|---|
+   120→   120→| **Lead-Zen** | Tech Lead | Manages all 4 Senior Developers, reports to Zephyr |
+   121→   121→| **Sr-Cloud** | Senior Developer | Manages Jr-Sky, Jr-Storm, Jr-Rain, Jr-Wind |
+   122→   122→| **Sr-Earth** | Senior Developer | Manages Jr-Mountain, Jr-Hill, Jr-Valley, Jr-Plain |
+   123→   123→| **Sr-Fire** | Senior Developer | Manages Jr-Flame, Jr-Ember, Jr-Ash, Jr-Coal |
+   124→   124→| **Sr-Water** | Senior Developer | Manages Jr-River, Jr-Lake, Jr-Ocean, Jr-Sea |
+   125→   125→| **Jr-Sky** | Junior Developer | Database/Infra development for areas 1-5 |
+   126→   126→| **Jr-Storm** | Junior Developer | Database/Infra development for areas 6-10 |
+   127→   127→| **Jr-Rain** | Junior Developer | Database/Infra development for areas 11-15 |
+   128→   128→| **Jr-Wind** | Junior Developer | Database/Infra development for areas 16-20 |
+   129→   129→| **Jr-Mountain** | Junior Developer | Database/Infra development for areas 21-25 |
+   130→   130→| **Jr-Hill** | Junior Developer | Database/Infra development for areas 26-30 |
+   131→   131→| **Jr-Valley** | Junior Developer | Database/Infra development for areas 31-35 |
+   132→   132→| **Jr-Plain** | Junior Developer | Database/Infra development for areas 36-40 |
+   133→   133→| **Jr-Flame** | Junior Developer | Database/Infra development for areas 41-45 |
+   134→   134→| **Jr-Ember** | Junior Developer | Database/Infra development for areas 46-50 |
+   135→   135→| **Jr-Ash** | Junior Developer | Database/Infra development for areas 51-55 |
+   136→   136→| **Jr-Coal** | Junior Developer | Database/Infra development for areas 56-60 |
+   137→   137→| **Jr-River** | Junior Developer | Database/Infra development for areas 61-65 |
+   138→   138→| **Jr-Lake** | Junior Developer | Database/Infra development for areas 66-70 |
+   139→   139→| **Jr-Ocean** | Junior Developer | Database/Infra development for areas 71-75 |
+   140→   140→| **Jr-Sea** | Junior Developer | Database/Infra development for areas 76-80 |
+   141→   141→| **Jr-Lake2** | Junior Developer | Database/Infra development for areas 81-82 |
+   142→   142→
+   143→   143→---
+   144→   144→
+   145→   145→## Department 3 — QUALITY COUNCIL (108 agents)
+   146→   146→
+   147→   147→### Verdict Team — Lead, Standards Compliance (17 agents)
+   148→   148→| Agent | Areas | Function |
+   149→   149→|---|---|---|
+   150→   150→| **Verdict-Lance** | 01–05 | Standards compliance for areas 1-5, reports to Verdict-Prime |
+   151→   151→| **Verdict-Hazel** | 06–10 | Standards compliance for areas 6-10, reports to Verdict-Prime |
+   152→   152→| **Verdict-Onyx** | 11–15 | Standards compliance for areas 11-15, reports to Verdict-Prime |
+   153→   153→| **Verdict-Brook** | 16–20 | Standards compliance for areas 16-20, reports to Verdict-Prime |
+   154→   154→| **Verdict-Garnet** | 21–25 | Standards compliance for areas 21-25, reports to Verdict-Prime |
+   155→   155→| **Verdict-Fenn** | 26–30 | Standards compliance for areas 26-30, reports to Verdict-Prime |
+   156→   156→| **Verdict-Storm** | 31–35 | Standards compliance for areas 31-35, reports to Verdict-Prime |
+   157→   157→| **Verdict-Clove** | 36–40 | Standards compliance for areas 36-40, reports to Verdict-Prime |
+   158→   158→| **Verdict-Ridley** | 41–45 | Standards compliance for areas 41-45, reports to Verdict-Prime |
+   159→   159→| **Verdict-Hawke** | 46–50 | Standards compliance for areas 46-50, reports to Verdict-Prime |
+   160→   160→| **Verdict-Wilder** | 51–55 | Standards compliance for areas 51-55, reports to Verdict-Prime |
+   161→   161→| **Verdict-Pike2** | 56–60 | Standards compliance for areas 56-60, reports to Verdict-Prime |
+   162→   162→| **Verdict-Sloane** | 61–65 | Standards compliance for areas 61-65, reports to Verdict-Prime |
+   163→   163→| **Verdict-Reign** | 66–70 | Standards compliance for areas 66-70, reports to Verdict-Prime |
+   164→   164→| **Verdict-Vance2** | 71–75 | Standards compliance for areas 71-75, reports to Verdict-Prime |
+   165→   165→| **Verdict-Knox** | 76–80 | Standards compliance for areas 76-80, reports to Verdict-Prime |
+   166→   166→| **Verdict-Wren2** | 81–82 | Standards compliance for areas 81-82, reports to Verdict-Prime |
+   167→   167→
+   168→   168→### Nemesis Team — Lead, Functional Testing (4 core + 51 batch agents)
+   169→   169→| Agent | Role | Function |
+   170→   170→|---|---|---|
+   171→   171→| **Pixel-Core** | Lead, Unit/Integration Tests | Oversees Pixel batch agents, coordinates test strategy |
+   172→   172→| **Pixel-Sage** | 01–05 | Unit/integration test scripts for areas 1-5 |
+   173→   173→| **Pixel-Reed** | 06–10 | Unit/integration test scripts for areas 6-10 |
+   174→   174→| **Pixel-Birch** | 11–15 | Unit/integration test scripts for areas 11-15 |
+   175→   175→| **Pixel-Cliff** | 16–20 | Unit/integration test scripts for areas 16-20 |
+   176→   176→| **Pixel-Moss** | 21–25 | Unit/integration test scripts for areas 21-25 |
+   177→   177→| **Pixel-Slate** | 26–30 | Unit/integration test scripts for areas 26-30 |
+   178→   178→| **Pixel-Fern** | 31–35 | Unit/integration test scripts for areas 31-35 |
+   179→   179→| **Pixel-Pike** | 36–40 | Unit/integration test scripts for areas 36-40 |
+   180→   180→| **Pixel-Wisp** | 41–45 | Unit/integration test scripts for areas 41-45 |
+   181→   181→| **Pixel-Cove** | 46–50 | Unit/integration test scripts for areas 46-50 |
+   182→   182→| **Pixel-Bramble** | 51–55 | Unit/integration test scripts for areas 51-55 |
+   183→   183→| **Pixel-Talon** | 56–60 | Unit/integration test scripts for areas 56-60 |
+   184→   184→| **Pixel-Marrow** | 61–65 | Unit/integration test scripts for areas 61-65 |
+   185→   185→| **Pixel-Glade** | 66–70 | Unit/integration test scripts for areas 66-70 |
+   186→   186→| **Pixel-Heron** | 71–75 | Unit/integration test scripts for areas 71-75 |
+   187→   187→| **Pixel-Frost** | 76–80 | Unit/integration test scripts for areas 76-80 |
+   188→   188→| **Pixel-Aster** | 81–82 | Unit/integration test scripts for areas 81-82 |
+   189→   189→| **Sentry-Core** | Lead, Test Reviewer | Oversees Sentry batch agents, reviews and approves test scripts |
+   190→   190→| **Sentry-Sage** | 01–05 | Test script reviewer for areas 1-5 |
+   191→   191→| **Sentry-Reed** | 06–10 | Test script reviewer for areas 6-10 |
+   192→   192→| **Sentry-Birch** | 11–15 | Test script reviewer for areas 11-15 |
+   193→   193→| **Sentry-Cliff** | 16–20 | Test script reviewer for areas 16-20 |
+   194→   194→| **Sentry-Moss** | 21–25 | Test script reviewer for areas 21-25 |
+   195→   195→| **Sentry-Slate** | 26–30 | Test script reviewer for areas 26-30 |
+   196→   196→| **Sentry-Fern** | 31–35 | Test script reviewer for areas 31-35 |
+   197→   197→| **Sentry-Pike** | 36–40 | Test script reviewer for areas 36-40 |
+   198→   198→| **Sentry-Wisp** | 41–45 | Test script reviewer for areas 41-45 |
+   199→   199→| **Sentry-Cove** | 46–50 | Test script reviewer for areas 46-50 |
+   200→   200→| **Sentry-Bramble** | 51–55 | Test script reviewer for areas 51-55 |
+   201→   201→| **Sentry-Talon** | 56–60 | Test script reviewer for areas 56-60 |
+   202→   202→| **Sentry-Marrow** | 61–65 | Test script reviewer for areas 61-65 |
+   203→   203→| **Sentry-Glade** | 66–70 | Test script reviewer for areas 66-70 |
+   204→   204→| **Sentry-Heron** | 71–75 | Test script reviewer for areas 71-75 |
+   205→   205→| **Sentry-Frost** | 76–80 | Test script reviewer for areas 76-80 |
+   206→   206→| **Sentry-Aster** | 81–82 | Test script reviewer for areas 81-82 |
+   207→   207→| **Scalpel-Core** | Lead, E2E Tests | Oversees Scalpel batch agents, coordinates e2e testing strategy |
+   208→   208→| **Scalpel-Sage** | 01–05 | E2E test scripts for areas 1-5 |
+   209→   209→| **Scalpel-Reed** | 06–10 | E2E test scripts for areas 6-10 |
+   210→   210→| **Scalpel-Birch** | 11–15 | E2E test scripts for areas 11-15 |
+   211→   211→| **Scalpel-Cliff** | 16–20 | E2E test scripts for areas 16-20 |
+   212→   212→| **Scalpel-Moss** | 21–25 | E2E test scripts for areas 21-25 |
+   213→   213→| **Scalpel-Slate** | 26–30 | E2E test scripts for areas 26-30 |
+   214→   214→| **Scalpel-Fern** | 31–35 | E2E test scripts for areas 31-35 |
+   215→   215→| **Scalpel-Pike** | 36–40 | E2E test scripts for areas 36-40 |
+   216→   216→| **Scalpel-Wisp** | 41–45 | E2E test scripts for areas 41-45 |
+   217→   217→| **Scalpel-Cove** | 46–50 | E2E test scripts for areas 46-50 |
+   218→   218→| **Scalpel-Bramble** | 51–55 | E2E test scripts for areas 51-55 |
+   219→   219→| **Scalpel-Talon** | 56–60 | E2E test scripts for areas 56-60 |
+   220→   220→| **Scalpel-Marrow** | 61–65 | E2E test scripts for areas 61-65 |
+   221→   221→| **Scalpel-Glade** | 66–70 | E2E test scripts for areas 66-70 |
+   222→   222→| **Scalpel-Heron** | 71–75 | E2E test scripts for areas 71-75 |
+   223→   223→| **Scalpel-Frost** | 76–80 | E2E test scripts for areas 76-80 |
+   224→   224→| **Scalpel-Aster** | 81–82 | E2E test scripts for areas 81-82 |
+   225→   225→| **Patch-Core** | Lead, Fixer | Oversees patch operations, coordinates fix strategy |
+   226→   226→
+   227→   227→### Janus Team — Lead, Security & Compliance (1 core + 17 batch agents)
+   228→   228→| Agent | Role | Function |
+   229→   229→|---|---|---|
+   230→   230→| **Janus-Core** | Lead, Security & Compliance | Oversees all security operations, reports to Hermes |
+   231→   231→| **Janus-Sage** | 01–05 | Security & compliance checks for areas 1-5 |
+   232→   232→| **Janus-Reed** | 06–10 | Security & compliance checks for areas 6-10 |
+   233→   233→| **Janus-Birch** | 11–15 | Security & compliance checks for areas 11-15 |
+   234→   234→| **Janus-Cliff** | 16–20 | Security & compliance checks for areas 16-20 |
+   235→   235→| **Janus-Moss** | 21–25 | Security & compliance checks for areas 21-25 |
+   236→   236→| **Janus-Slate** | 26–30 | Security & compliance checks for areas 26-30 |
+   237→   237→| **Janus-Fern** | 31–35 | Security & compliance checks for areas 31-35 |
+   238→   238→| **Janus-Pike** | 36–40 | Security & compliance checks for areas 36-40 |
+   239→   239→| **Janus-Wisp** | 41–45 | Security & compliance checks for areas 41-45 |
+   240→   240→| **Janus-Cove** | 46–50 | Security & compliance checks for areas 46-50 |
+   241→   241→| **Janus-Bramble** | 51–55 | Security & compliance checks for areas 51-55 |
+   242→   242→| **Janus-Talon** | 56–60 | Security & compliance checks for areas 56-60 |
+   243→   243→| **Janus-Marrow** | 61–65 | Security & compliance checks for areas 61-65 |
+   244→   244→| **Janus-Glade** | 66–70 | Security & compliance checks for areas 66-70 |
+   245→   245→| **Janus-Heron** | 71–75 | Security & compliance checks for areas 71-75 |
+   246→   246→| **Janus-Frost** | 76–80 | Security & compliance checks for areas 76-80 |
+   247→   247→| **Janus-Aster** | 81–82 | Security & compliance checks for areas 81-82 |
+   248→   248→
+   249→   249→### Pulse Team — Lead, Bug Fixing (1 core + 17 batch agents)
+   250→   250→| Agent | Role | Function |
+   251→   251→|---|---|---|
+   252→   252→| **Pulse-Core** | Lead, Bug Fixer | Oversees all bug fix operations, coordinates fix strategy |
+   253→   253→| **Pulse-Sage** | 01–05 | Bug fixing for areas 1-5, monitors error logs |
+   254→   254→| **Pulse-Reed** | 06–10 | Bug fixing for areas 6-10, monitors error logs |
+   255→   255→| **Pulse-Birch** | 11–15 | Bug fixing for areas 11-15, monitors error logs |
+   256→   256→| **Pulse-Cliff** | 16–20 | Bug fixing for areas 16-20, monitors error logs |
+   257→   257→| **Pulse-Moss** | 21–25 | Bug fixing for areas 21-25, monitors error logs |
+   258→   258→| **Pulse-Slate** | 26–30 | Bug fixing for areas 26-30, monitors error logs |
+   259→   259→| **Pulse-Fern** | 31–35 | Bug fixing for areas 31-35, monitors error logs |
+   260→   260→| **Pulse-Pike** | 36–40 | Bug fixing for areas 36-40, monitors error logs |
+   261→   261→| **Pulse-Wisp** | 41–45 | Bug fixing for areas 41-45, monitors error logs |
+   262→   262→| **Pulse-Cove** | 46–50 | Bug fixing for areas 46-50, monitors error logs |
+   263→   263→| **Pulse-Bramble** | 51–55 | Bug fixing for areas 51-55, monitors error logs |
+   264→   264→| **Pulse-Talon** | 56–60 | Bug fixing for areas 56-60, monitors error logs |
+   265→   265→| **Pulse-Marrow** | 61–65 | Bug fixing for areas 61-65, monitors error logs |
+   266→   266→| **Pulse-Glade** | 66–70 | Bug fixing for areas 66-70, monitors error logs |
+   267→   267→| **Pulse-Heron** | 71–75 | Bug fixing for areas 71-75, monitors error logs |
+   268→   268→| **Pulse-Frost** | 76–80 | Bug fixing for areas 76-80, monitors error logs |
+   269→   269→| **Pulse-Aster** | 81–82 | Bug fixing for areas 81-82, monitors error logs |
+   270→   270→
+   271→   271→---
+   272→   272→
+   273→   273→## Department 4 — DOCUMENTATION TEAM (60 agents)
+   274→   274→
+   275→   275→### Quill Team — Lead, Documentation (5 agents)
+   276→   276→| Agent | Role | Function |
+   277→   277→|---|---|---|
+   278→   278→| **Quill** | Lead, Documentation | Oversees all documentation operations |
+   279→   279→| **Scroll** | README + Changelog | Maintains project README and changelog documentation |
+   280→   280→| **Stamp** | Commit Messages + Progress | Manages commit message standards and progress tracking |
+   281→   281→| **Ledger** | Environment Docs | Maintains .env.example and environment documentation |
+   282→   282→| **Draft** | Component/API Docs | Manages component and API documentation |
+   283→   283→
+   284→   284→### Memory Team — Project Memory (3 agents)
+   285→   285→| Agent | Role | Function |
+   286→   286→|---|---|---|
+   287→   287→| **Memory-Architecture** | Architecture Memory | Tracks overall project architecture changes, maintains Gen 001, Gen 002, etc. |
+   288→   288→| **Memory-Choices** | Non-Standard Choices | Documents non-standard technical choices and decisions |
+   289→   289→| **Memory-Forgotten** | Forgotten Rules | Maintains system rules that are automatically forgotten, 128-line compaction |
+   290→   290→
+   291→   291→### Embedded Documentation Agents (51 agents)
+   292→   292→| Agent | Department | Areas | Function |
+   293→   293→|---|---|---|---|
+   294→   294→| **Doc-Intelligence-Sage** | Intelligence | 01–05 | Real-time documentation of Intelligence team decisions |
+   295→   295→| **Doc-Intelligence-Reed** | Intelligence | 06–10 | Real-time documentation of Intelligence team decisions |
+   296→   296→| **Doc-Intelligence-Birch** | Intelligence | 11–15 | Real-time documentation of Intelligence team decisions |
+   297→   297→| **Doc-Intelligence-Cliff** | Intelligence | 16–20 | Real-time documentation of Intelligence team decisions |
+   298→   298→| **Doc-Intelligence-Moss** | Intelligence | 21–25 | Real-time documentation of Intelligence team decisions |
+   299→   299→| **Doc-Intelligence-Slate** | Intelligence | 26–30 | Real-time documentation of Intelligence team decisions |
+   300→   300→| **Doc-Intelligence-Fern** | Intelligence | 31–35 | Real-time documentation of Intelligence team decisions |
+   301→   301→| **Doc-Intelligence-Pike** | Intelligence | 36–40 | Real-time documentation of Intelligence team decisions |
+   302→   302→| **Doc-Intelligence-Wisp** | Intelligence | 41–45 | Real-time documentation of Intelligence team decisions |
+   303→   303→| **Doc-Intelligence-Cove** | Intelligence | 46–50 | Real-time documentation of Intelligence team decisions |
+   304→   304→| **Doc-Intelligence-Bramble** | Intelligence | 51–55 | Real-time documentation of Intelligence team decisions |
+   305→   305→| **Doc-Intelligence-Talon** | Intelligence | 56–60 | Real-time documentation of Intelligence team decisions |
+   306→   306→| **Doc-Intelligence-Marrow** | Intelligence | 61–65 | Real-time documentation of Intelligence team decisions |
+   307→   307→| **Doc-Intelligence-Glade** | Intelligence | 66–70 | Real-time documentation of Intelligence team decisions |
+   308→   308→| **Doc-Intelligence-Heron** | Intelligence | 71–75 | Real-time documentation of Intelligence team decisions |
+   309→   309→| **Doc-Intelligence-Frost** | Intelligence | 76–80 | Real-time documentation of Intelligence team decisions |
+   310→   310→| **Doc-Intelligence-Aster** | Intelligence | 81–82 | Real-time documentation of Intelligence team decisions |
+   311→   311→| **Doc-Build-Sage** | Build | 01–05 | Real-time documentation of Build team decisions |
+   312→   312→| **Doc-Build-Reed** | Build | 06–10 | Real-time documentation of Build team decisions |
+   313→   313→| **Doc-Build-Birch** | Build | 11–15 | Real-time documentation of Build team decisions |
+   314→   314→| **Doc-Build-Cliff** | Build | 16–20 | Real-time documentation of Build team decisions |
+   315→   315→| **Doc-Build-Moss** | Build | 21–25 | Real-time documentation of Build team decisions |
+   316→   316→| **Doc-Build-Slate** | Build | 26–30 | Real-time documentation of Build team decisions |
+   317→   317→| **Doc-Build-Fern** | Build | 31–35 | Real-time documentation of Build team decisions |
+   318→   318→| **Doc-Build-Pike** | Build | 36–40 | Real-time documentation of Build team decisions |
+   319→   319→| **Doc-Build-Wisp** | Build | 41–45 | Real-time documentation of Build team decisions |
+   320→   320→| **Doc-Build-Cove** | Build | 46–50 | Real-time documentation of Build team decisions |
+   321→   321→| **Doc-Build-Bramble** | Build | 51–55 | Real-time documentation of Build team decisions |
+   322→   322→| **Doc-Build-Talon** | Build | 56–60 | Real-time documentation of Build team decisions |
+   323→   323→| **Doc-Build-Marrow** | Build | 61–65 | Real-time documentation of Build team decisions |
+   324→   324→| **Doc-Build-Glade** | Build | 66–70 | Real-time documentation of Build team decisions |
+   325→   325→| **Doc-Build-Heron** | Build | 71–75 | Real-time documentation of Build team decisions |
+   326→   326→| **Doc-Build-Frost** | Build | 76–80 | Real-time documentation of Build team decisions |
+   327→   327→| **Doc-Build-Aster** | Build | 81–82 | Real-time documentation of Build team decisions |
+   328→   328→| **Doc-Quality-Sage** | Quality | 01–05 | Real-time documentation of Quality team decisions |
+   329→   329→| **Doc-Quality-Reed** | Quality | 06–10 | Real-time documentation of Quality team decisions |
+   330→   330→| **Doc-Quality-Birch** | Quality | 11–15 | Real-time documentation of Quality team decisions |
+   331→   331→| **Doc-Quality-Cliff** | Quality | 16–20 | Real-time documentation of Quality team decisions |
+   332→   332→| **Doc-Quality-Moss** | Quality | 21–25 | Real-time documentation of Quality team decisions |
+   333→   333→| **Doc-Quality-Slate** | Quality | 26–30 | Real-time documentation of Quality team decisions |
+   334→   334→| **Doc-Quality-Fern** | Quality | 31–35 | Real-time documentation of Quality team decisions |
+   335→   335→| **Doc-Quality-Pike** | Quality | 36–40 | Real-time documentation of Quality team decisions |
+   336→   336→| **Doc-Quality-Wisp** | Quality | 41–45 | Real-time documentation of Quality team decisions |
+   337→   337→| **Doc-Quality-Cove** | Quality | 46–50 | Real-time documentation of Quality team decisions |
+   338→   338→| **Doc-Quality-Bramble** | Quality | 51–55 | Real-time documentation of Quality team decisions |
+   339→   339→| **Doc-Quality-Talon** | Quality | 56–60 | Real-time documentation of Quality team decisions |
+   340→   340→| **Doc-Quality-Marrow** | Quality | 61–65 | Real-time documentation of Quality team decisions |
+   341→   341→| **Doc-Quality-Glade** | Quality | 66–70 | Real-time documentation of Quality team decisions |
+   342→   342→| **Doc-Quality-Heron** | Quality | 71–75 | Real-time documentation of Quality team decisions |
+   343→   343→| **Doc-Quality-Frost** | Quality | 76–80 | Real-time documentation of Quality team decisions |
+   344→   344→| **Doc-Quality-Aster** | Quality | 81–82 | Real-time documentation of Quality team decisions |
+   345→   345→
+   346→   346→---
+   347→   347→
+   348→   348→## Summary
+   349→   349→
+   350→   350→| Department | Named Agents |
+   351→   351→|---|---|
+   352→   352→| Executive | 2 |
+   353→   353→| Intelligence | 38 |
+   354→   354→| Build | 69 |
+   355→   355→| Quality Council | 108 |
+   356→   356→| Documentation | 60 |
+   357→   357→| **Total** | **277** |
+   358→   358→
+   359→   359→---
+   360→   360→
+   361→   361→*Last updated: June 2026*
+   362→   362→*WebForge Agent Registry — Victor Makuo*
+   363→   363→
+   364→   364→
+   365→   365→# Web Development Areas Reference
+   366→   366→> Covers: Websites, Web Apps, and Mobile/Desktop Apps
+   367→   367→> Purpose: Kickoff checklist — every area must be considered before building starts
+   368→   368→
+   369→   369→---
+   370→   370→
+   371→   371→## HOW TO USE THIS DOCUMENT
+   372→   372→When starting any new project, go through every area. Mark each one as:
+   373→   373→- ✅ **Decided** — decision made, documented
+   374→   374→- ⏭️ **Skip** — not needed for this project
+   375→   375→- 🔲 **Pending** — needs decision before build starts
+   376→   376→
+   377→   377→---
+   378→   378→
+   379→   379→## SECTION A — APPLIES TO ALL (Websites + Web Apps + Apps)
+   380→   380→
+   381→   381→---
+   382→   382→
+   383→   383→### 01. Project Setup
+   384→   384→- What is the project name?
+   385→   385→- Who is the client?
+   386→   386→- What is the deadline?
+   387→   387→- What is the budget?
+   388→   388→- What is the target audience? (Nigeria, international, both)
+   389→   389→- What currency? (Naira, USD, both)
+   390→   390→- Do we have a domain?
+   391→   391→- What is the hosting target? (Vercel, Render, VPS, other)
+   392→   392→- What environment separation do we need? (dev, staging, production)
+   393→   393→
+   394→   394→---
+   395→   395→
+   396→   396→### 02. Stack Decisions
+   397→   397→- Frontend framework (Next.js, Remix, Astro, React + Vite)
+   398→   398→- CSS approach (Tailwind, CSS Modules, styled-components)
+   399→   399→- TypeScript or JavaScript?
+   400→   400→- Component library? (shadcn/ui, Radix, none)
+   401→   401→- Animation library? (Framer Motion, GSAP, CSS only)
+   402→   402→- State management? (Zustand, React Query, Context, none)
+   403→   403→- Form library? (React Hook Form, native, other)
+   404→   404→- Validation? (Zod, Yup, none)
+   405→   405→
+   406→   406→---
+   407→   407→
+   408→   408→### 03. Design System
+   409→   409→- Color tokens (primary, secondary, accent, neutral, error, success)
+   410→   410→- Typography (font family, scale, weights)
+   411→   411→- Spacing scale
+   412→   412→- Border radius convention
+   413→   413→- Shadow convention
+   414→   414→- Dark mode required?
+   415→   415→- Design reference sites or Figma file?
+   416→   416→- Which design principles are we following?
+   417→   417→
+   418→   418→---
+   419→   419→
+   420→   420→### 04. Brand & Identity
+   421→   421→- Logo available? (Yes / No / Need to generate)
+   422→   422→- Brand colors defined?
+   423→   423→- Brand fonts defined?
+   424→   424→- Brand voice? (Professional, casual, bold, warm)
+   425→   425→- Any brand guidelines document?
+   426→   426→
+   427→   427→---
+   428→   428→
+   429→   429→### 05. Frontend Architecture
+   430→   430→- Folder structure convention
+   431→   431→- Component naming convention
+   432→   432→- File naming convention
+   433→   433→- Server components vs client components strategy (Next.js)
+   434→   434→- Where does data fetching happen? (server, client, both)
+   435→   435→- Code splitting strategy
+   436→   436→- Bundle size budget
+   437→   437→
+   438→   438→---
+   439→   439→
+   440→   440→### 06. Routing & Navigation
+   441→   441→- What are all the pages/routes?
+   442→   442→- Is there a mega menu? (How many levels? Static or dynamic?)
+   443→   443→- Mobile navigation pattern (drawer, bottom nav, accordion)
+   444→   444→- Protected routes? (Which ones require auth?)
+   445→   445→- 404 and error pages needed?
+   446→   446→- Redirect rules?
+   447→   447→
+   448→   448→---
+   449→   449→
+   450→   450→### 07. SEO & Discoverability
+   451→   451→- robots.txt (AI generates and maintains)
+   452→   452→- sitemap.xml (AI generates and maintains)
+   453→   453→- schema.org structured data (AI generates and maintains)
+   454→   454→- llms.txt (AI generates and maintains)
+   455→   455→- Meta tags strategy (title, description, OG, Twitter cards)
+   456→   456→- Canonical URLs
+   457→   457→- Is SEO a priority or secondary concern?
+   458→   458→
+   459→   459→---
+   460→   460→
+   461→   461→### 08. Performance
+   462→   462→- Core Web Vitals targets (LCP, CLS, FID)
+   463→   463→- Image optimization strategy (next/image, Cloudinary, manual)
+   464→   464→- Lazy loading strategy
+   465→   465→- Font loading strategy
+   466→   466→- Third party script loading (defer, async, none)
+   467→   467→- Caching strategy (browser, CDN, server)
+   468→   468→- Target Lighthouse score?
+   469→   469→
+   470→   470→---
+   471→   471→
+   472→   472→### 81. Load & Stress Testing
+   473→   473→- What is the expected concurrent user load at launch and in 6 months?
+   474→   474→- What is the acceptable response time under load (e.g., < 2 seconds)?
+   475→   475→- What load testing tool will be used? (k6, Artillery, Locust)
+   476→   476→- What is the stress testing plan to find the breaking point?
+   477→   477→- Who runs these tests and when?
+   478→   478→
+   479→   479→---
+   480→   480→
+   481→   481→### 09. Responsive & Cross-Device
+   482→   482→- Which breakpoints? (mobile, tablet, desktop, wide)
+   483→   483→- Mobile-first or desktop-first?
+   484→   484→- Which devices must be tested on?
+   485→   485→- Touch interactions needed?
+   486→   486→
+   487→   487→---
+   488→   488→
+   489→   489→### 10. Cross-Browser Compatibility
+   490→   490→- Which browsers to support? (Chrome, Firefox, Safari, Edge)
+   491→   491→- Safari iOS is always the problem — any known CSS issues?
+   492→   492→- Minimum browser versions?
+   493→   493→- Progressive enhancement or graceful degradation?
+   494→   494→- Testing strategy (manual, BrowserStack, other)
+   495→   495→
+   496→   496→---
+   497→   497→
+   498→   498→### 11. Accessibility (a11y)
+   499→   499→- ARIA labels required?
+   500→   500→- Keyboard navigation required?
+   501→   501→- Color contrast standard (WCAG AA or AAA)?
+   502→   502→- Screen reader testing?
+   503→   503→- Focus management?
+   504→   504→- Is this legally required for the client?
+   505→   505→
+   506→   506→---
+   507→   507→
+   508→   508→### 12. Assets & Media
+   509→   509→- Where are images stored? (Supabase Storage, Cloudinary, S3)
+   510→   510→- Who provides product/content images? (Client or we generate)
+   511→   511→- Image naming convention
+   512→   512→- Video hosting? (YouTube embed, Cloudinary, self-hosted)
+   513→   513→- Icon library? (Lucide, HeroIcons, custom SVG)
+   514→   514→- Maximum file size limits?
+   515→   515→
+   516→   516→---
+   517→   517→
+   518→   518→### 13. Error Handling
+   519→   519→- Error boundary components (where and how many)
+   520→   520→- API error shape (what does an error response look like)
+   521→   521→- User-facing error messages (tone, placement)
+   522→   522→- Logging tool? (Sentry, console only, custom)
+   523→   523→- What happens when Supabase is down?
+   524→   524→- What happens when a third party API fails?
+   525→   525→
+   526→   526→---
+   527→   527→
+   528→   528→### 14. Environment & Configuration
+   529→   529→- .env.example maintained and up to date?
+   530→   530→- Which variables go in dev vs staging vs production?
+   531→   531→- Who has access to production secrets?
+   532→   532→- What happens when a key leaks? (rotation plan)
+   533→   533→- Feature flags? (How to turn features on/off without deploying)
+   534→   534→
+   535→   535→---
+   536→   536→
+   537→   537→### 15. Version Control Conventions
+   538→   538→- Branch naming convention (feature/, fix/, chore/)
+   539→   539→- Commit message format (conventional commits)
+   540→   540→- PR process (reviews required?)
+   541→   541→- When to tag releases?
+   542→   542→- Main branch protection rules?
+   543→   543→
+   544→   544→---
+   545→   545→
+   546→   546→### 16. Development Workflow
+   547→   547→- Linting (ESLint config)
+   548→   548→- Formatting (Prettier config)
+   549→   549→- Pre-commit hooks (Husky + lint-staged)
+   550→   550→- TypeScript strict mode?
+   551→   551→- Code review process?
+   552→   552→
+   553→   553→---
+   554→   554→
+   555→   555→### 17. Testing
+   556→   556→- What gets tested? (critical paths only, or everything)
+   557→   557→- Unit tests? (Vitest, Jest)
+   558→   558→- E2E tests? (Playwright, Cypress)
+   559→   559→- Component tests? (Storybook, React Testing Library)
+   560→   560→- Who runs tests? (manual, CI)
+   561→   561→
+   562→   562→---
+   563→   563→
+   564→   564→### 18. Deployment & DevOps
+   565→   565→- CI/CD pipeline? (GitHub Actions, Vercel auto-deploy)
+   566→   566→- Preview deployments per PR?
+   567→   567→- Environment separation (dev/staging/prod)
+   568→   568→- How to rollback a bad deployment?
+   569→   569→- Build time targets?
+   570→   570→
+   571→   571→---
+   572→   572→
+   573→   573→### 19. Monitoring & Observability
+   574→   574→- Uptime monitoring? (Better Uptime, UptimeRobot)
+   575→   575→- Error tracking (Sentry)
+   576→   576→- Performance monitoring (Vercel Analytics, Datadog)
+   577→   577→- User analytics (Posthog, GA4)
+   578→   578→- What alerts exist and who gets notified?
+   579→   579→
+   580→   580→---
+   581→   581→
+   582→   582→### 20. Legal & Compliance
+   583→   583→- Privacy policy page needed?
+   584→   584→- Cookie consent banner needed?
+   585→   585→- GDPR compliance required? (EU audience)
+   586→   586→- Terms of service needed?
+   587→   587→- Age restrictions on content?
+   588→   588→- Is the app subject to the Nigeria Data Protection Regulation (NDPR)?
+   589→   589→- Does it process personal data of Nigerian citizens?
+   590→   590→- What are the explicit consent requirements for data collection?
+   591→   591→- Breach notification timeline (72 hours under NDPR)?
+   592→   592→- Data localization requirements (must data be stored in Nigeria)?
+   593→   593→- Who is the Data Protection Officer (DPO) or responsible contact?
+   594→   594→
+   595→   595→---
+   596→   596→
+   597→   597→### 82. NDPR Compliance (Nigeria)
+   598→   598→
+   599→   599→---
+   600→   600→
+   601→   601→### 21. Documentation
+   602→   602→- README (AI generates and maintains)
+   603→   603→- Changelog (AI generates and maintains)
+   604→   604→- Inline code comments standard
+   605→   605→- API documentation (if applicable)
+   606→   606→- Onboarding doc for next developer
+   607→   607→
+   608→   608→---
+   609→   609→
+   610→   610→### 22. Naming Conventions
+   611→   611→- Component names (PascalCase)
+   612→   612→- File names (kebab-case or PascalCase)
+   613→   613→- CSS class names
+   614→   614→- Supabase table names (snake_case)
+   615→   615→- Supabase function names
+   616→   616→- Variable and function names (camelCase)
+   617→   617→- Constants (UPPER_SNAKE_CASE)
+   618→   618→
+   619→   619→---
+   620→   620→
+   621→   621→### 23. Animation & Interactions
+   622→   622→- Do we use Framer Motion?
+   623→   623→- What is the performance budget for animations?
+   624→   624→- Page transitions?
+   625→   625→- Micro-interactions (hover, click, focus)?
+   626→   626→- Loading state animations?
+   627→   627→- Reduced motion support?
+   628→   628→
+   629→   629→---
+   630→   630→
+   631→   631→### 24. Notifications & Feedback
+   632→   632→- Toast messages (which library, position, duration)
+   633→   633→- Modal/dialog pattern
+   634→   634→- Confirmation dialogs (before delete, etc.)
+   635→   635→- Loading indicators (skeleton, spinner, both)
+   636→   636→- Empty state designs
+   637→   637→- Success states
+   638→   638→
+   639→   639→---
+   640→   640→
+   641→   641→### 25. Forms & Validation
+   642→   642→- Form library (React Hook Form)
+   643→   643→- Validation library (Zod)
+   644→   644→- How are errors displayed to user?
+   645→   645→- File upload handling?
+   646→   646→- Multi-step forms needed?
+   647→   647→- Auto-save on forms?
+   648→   648→
+   649→   649→---
+   650→   650→
+   651→   651→### 26. Internationalization (i18n)
+   652→   652→- Multiple languages needed now or in future?
+   653→   653→- Right-to-left support?
+   654→   654→- Date and time format per locale?
+   655→   655→- Currency format per locale?
+   656→   656→- If not now — is the architecture flexible enough to add later?
+   657→   657→
+   658→   658→---
+   659→   659→
+   660→   660→### 27. Offline & PWA
+   661→   661→- Does it need to work offline?
+   662→   662→- Install to homescreen?
+   663→   663→- Service workers?
+   664→   664→- Background sync?
+   665→   665→- (Important for Nigerian context — power outages and poor connectivity)
+   666→   666→
+   667→   667→---
+   668→   668→
+   669→   669→### 28. Cookie & Session Management
+   670→   670→- How long do sessions last?
+   671→   671→- Remember me functionality?
+   672→   672→- Secure and httpOnly cookies?
+   673→   673→- What happens when session expires mid-task?
+   674→   674→- Multiple device handling?
+   675→   675→
+   676→   676→---
+   677→   677→
+   678→   678→### 29. Redirect & URL Management
+   679→   679→- 301 vs 302 redirects
+   680→   680→- Trailing slash consistency
+   681→   681→- URL structure convention (kebab-case)
+   682→   682→- Old URLs after restructuring
+   683→   683→- Canonical URLs
+   684→   684→
+   685→   685→---
+   686→   686→
+   687→   687→### 30. Code Splitting & Bundle Size
+   688→   688→- Which routes are lazy loaded?
+   689→   689→- Bundle analyzer setup (next bundle analyzer)
+   690→   690→- Third party library weight audit
+   691→   691→- Tree shaking configured?
+   692→   692→
+   693→   693→---
+   694→   694→
+   695→   695→### 31. Backup & Recovery
+   696→   696→- Database backup schedule
+   697→   697→- How to rollback a bad migration?
+   698→   698→- Disaster recovery plan
+   699→   699→- Who is responsible for backups?
+   700→   700→
+   701→   701→---
+   702→   702→
+   703→   703→### 32. Client Communication
+   704→   704→- What questions do we ask client before starting?
+   705→   705→- How do we communicate progress? (WhatsApp, email)
+   706→   706→- What format are client updates in?
+   707→   707→- Who approves designs before build starts?
+   708→   708→- What is the handoff process at the end?
+   709→   709→
+   710→   710→---
+   711→   711→
+   712→   712→### 33. Handoff & Maintenance
+   713→   713→- Who maintains after launch? (You, client, third party)
+   714→   714→- Admin credentials handoff process
+   715→   715→- Client training needed?
+   716→   716→- Documentation for next developer
+   717→   717→- Support period after launch?
+   718→   718→
+   719→   719→---
+   720→   720→
+   721→   721→---
+   722→   722→
+   723→   723→## SECTION B — E-COMMERCE SPECIFIC (Websites selling products)
+   724→   724→
+   725→   725→---
+   726→   726→
+   727→   727→### 34. Payment Integration
+   728→   728→- Payment providers (Paystack for Nigeria, Stripe for international)
+   729→   729→- Test mode vs live mode plan
+   730→   730→- Webhook handling (what events to listen to)
+   731→   731→- Refund flow
+   732→   732→- Failed payment handling
+   733→   733→- Receipt/invoice generation
+   734→   734→
+   735→   735→---
+   736→   736→
+   737→   737→### 35. Product Catalog
+   738→   738→- How many products at launch?
+   739→   739→- Product categories and subcategories
+   740→   740→- Product variants (size, color, flavor)
+   741→   741→- Product images (how many per product, formats)
+   742→   742→- Product descriptions (who writes them)
+   743→   743→- Featured products logic
+   744→   744→- Related products logic
+   745→   745→
+   746→   746→---
+   747→   747→
+   748→   748→### 36. Inventory Management
+   749→   749→- Auto-tracking or manual?
+   750→   750→- Out of stock behavior (hide, show label, allow backorder)
+   751→   751→- Low stock alerts?
+   752→   752→- Who updates inventory?
+   753→   753→- Selling on multiple platforms? (affects inventory count)
+   754→   754→
+   755→   755→---
+   756→   756→
+   757→   757→### 37. Cart & Checkout
+   758→   758→- Cart (multi-product) or buy now (single product)?
+   759→   759→- Guest checkout or account required?
+   760→   760→- Saved cart (persists after session)?
+   761→   761→- Checkout steps (how many pages)
+   762→   762→- Address autocomplete?
+   763→   763→- Order summary page
+   764→   764→
+   765→   765→---
+   766→   766→
+   767→   767→### 38. Shipping & Delivery
+   768→   768→- Physical or digital products?
+   769→   769→- Who handles shipping? (Client or courier)
+   770→   770→- Shipping zones (Nigeria only, international)
+   771→   771→- Shipping cost calculation (flat rate, by weight, by location)
+   772→   772→- Delivery time estimates shown to customer?
+   773→   773→- Order tracking integration?
+   774→   774→
+   775→   775→---
+   776→   776→
+   777→   777→### 39. Discount & Promotions
+   778→   778→- Discount codes / promo codes
+   779→   779→- Percentage vs fixed amount discounts
+   780→   780→- Minimum order value for discount
+   781→   781→- Expiry dates on codes
+   782→   782→- Flash sales / limited time offers
+   783→   783→- Loyalty program?
+   784→   784→
+   785→   785→---
+   786→   786→
+   787→   787→### 40. Order Management
+   788→   788→- Order statuses (pending, confirmed, shipped, delivered, cancelled)
+   789→   789→- Who gets notified and how (email, WhatsApp, both)
+   790→   790→- Order history for customers
+   791→   791→- Admin order management panel
+   792→   792→- Refund and cancellation flow
+   793→   793→- Returns process
+   794→   794→
+   795→   795→---
+   796→   796→
+   797→   797→### 41. CMS Integration
+   798→   798→- Is there a CMS? (Sanity, Contentful, none)
+   799→   799→- Who updates content? (Developer or client)
+   800→   800→- What content is editable? (Products, blog, banners, homepage)
+   801→   801→- Content preview before publishing?
+   802→   802→
+   803→   803→---
+   804→   804→
+   805→   805→### 42. Reviews & Testimonials
+   806→   806→- Customer reviews on products?
+   807→   807→- Moderation required?
+   808→   808→- Star ratings?
+   809→   809→- Photo reviews?
+   810→   810→- Testimonials section (curated, not from customers)
+   811→   811→
+   812→   812→---
+   813→   813→
+   814→   814→---
+   815→   815→
+   816→   816→## SECTION C — WEB APP SPECIFIC (Tools, platforms, SaaS)
+   817→   817→
+   818→   818→---
+   819→   819→
+   820→   820→### 43. Authentication & Authorization
+   821→   821→- Auth provider (Supabase Auth, NextAuth, Clerk)
+   822→   822→- Login methods (email/password, Google, GitHub, magic link)
+   823→   823→- Role-based access control (admin, user, moderator)
+   824→   824→- Protected route strategy
+   825→   825→- Session management
+   826→   826→- Password reset flow
+   827→   827→- Email verification flow
+   828→   828→
+   829→   829→---
+   830→   830→
+   831→   831→### 44. User Management
+   832→   832→- User profiles (what fields)
+   833→   833→- Avatar upload
+   834→   834→- Account settings page
+   835→   835→- Account deletion (soft or hard)
+   836→   836→- Admin panel for managing users
+   837→   837→- User search and filtering (admin side)
+   838→   838→
+   839→   839→---
+   840→   840→
+   841→   841→### 45. Onboarding Flow
+   842→   842→- First-time user experience
+   843→   843→- Empty states (what user sees with no data)
+   844→   844→- Guided tour or tooltips?
+   845→   845→- Welcome email sequence
+   846→   846→- Progress indicators
+   847→   847→
+   848→   848→---
+   849→   849→
+   850→   850→### 46. Dashboard & Data Visualization
+   851→   851→- What charts are needed? (bar, line, pie, area)
+   852→   852→- Chart library (Recharts, Chart.js, D3)
+   853→   853→- Date range filtering
+   854→   854→- Data export (CSV, PDF)
+   855→   855→- Real-time updates on dashboard?
+   856→   856→- Pagination on tables
+   857→   857→
+   858→   858→---
+   859→   859→
+   860→   860→### 47. Real-time Features
+   861→   861→- What needs live updates? (notifications, chat, dashboard)
+   862→   862→- Supabase Realtime, websockets, or polling?
+   863→   863→- What triggers real-time events?
+   864→   864→- Conflict handling when two users edit same data?
+   865→   865→
+   866→   866→---
+   867→   867→
+   868→   868→### 48. Notification System
+   869→   869→- In-app notifications
+   870→   870→- Email notifications (which events trigger emails)
+   871→   871→- Push notifications (mobile/PWA)
+   872→   872→- Notification preferences (user can turn off)
+   873→   873→- Notification history/inbox
+   874→   874→
+   875→   875→---
+   876→   876→
+   877→   877→### 49. Multi-tenancy
+   878→   878→- Is this one app serving multiple organizations?
+   879→   879→- Row-level data isolation (Supabase RLS)
+   880→   880→- Subdomain per tenant?
+   881→   881→- Tenant-specific settings and branding?
+   882→   882→- This MUST be decided before any database design
+   883→   883→
+   884→   884→---
+   885→   885→
+   886→   886→### 50. File Management
+   887→   887→- Upload functionality (what file types)
+   888→   888→- Storage provider (Supabase Storage, Cloudinary, S3)
+   889→   889→- File size limits
+   890→   890→- File type restrictions
+   891→   891→- Virus scanning?
+   892→   892→- File deletion (when user deletes, is file removed from storage?)
+   893→   893→
+   894→   894→---
+   895→   895→
+   896→   896→### 51. Search & Filtering
+   897→   897→- Global app search?
+   898→   898→- Per-table filtering
+   899→   899→- Supabase full-text search or Algolia?
+   900→   900→- Filter persistence (saved after page reload?)
+   901→   901→- Sort options
+   902→   902→
+   903→   903→---
+   904→   904→
+   905→   905→### 52. Audit Logs & Activity History
+   906→   906→- Who did what and when
+   907→   907→- Which actions are logged?
+   908→   908→- How long are logs retained?
+   909→   909→- Who can see the logs? (admin only, all users)
+   910→   910→- Important for apps handling money or sensitive data
+   911→   911→
+   912→   912→---
+   913→   913→
+   914→   914→### 53. Import & Export
+   915→   915→- Can users import data? (CSV upload)
+   916→   916→- Can users export data? (CSV, PDF, Excel)
+   917→   917→- Bulk operations (select all, delete all, update all)
+   918→   918→- Data portability (user can download all their data)
+   919→   919→
+   920→   920→---
+   921→   921→
+   922→   922→### 54. Subscription & Feature Gating
+   923→   923→- Which features are free vs paid?
+   924→   924→- How is entitlement checked? (on every request or cached)
+   925→   925→- What happens when subscription expires?
+   926→   926→- Grace period after expiry?
+   927→   927→- Upgrade/downgrade flow
+   928→   928→
+   929→   929→---
+   930→   930→
+   931→   931→### 55. Settings & Configuration
+   932→   932→- User-level settings (preferences, notifications, theme)
+   933→   933→- App-wide settings (admin configures)
+   934→   934→- Feature flags (turn features on/off without deploying)
+   935→   935→- Where do settings persist? (database, localStorage — never localStorage)
+   936→   936→
+   937→   937→---
+   938→   938→
+   939→   939→### 56. Admin Panel
+   940→   940→- Separate from user-facing app or embedded?
+   941→   941→- Who has admin access?
+   942→   942→- What can admin do? (manage users, view logs, configure settings)
+   943→   943→- Admin-only routes protection
+   944→   944→
+   945→   945→---
+   946→   946→
+   947→   947→### 57. API Design (if exposing API)
+   948→   948→- REST or GraphQL?
+   949→   949→- Versioning strategy (/api/v1/)
+   950→   950→- Authentication for API (Bearer token, API key)
+   951→   951→- Rate limiting
+   952→   952→- API documentation (Swagger, Postman collection)
+   953→   953→- If mobile app will consume this later — design for it now
+   954→   954→
+   955→   955→---
+   956→   956→
+   957→   957→### 58. Background Jobs & Queues
+   958→   958→- What tasks run in background? (emails, file processing, reports)
+   959→   959→- Job queue tool (Inngest, Bull, Supabase Edge Functions)
+   960→   960→- Retry logic on failure
+   961→   961→- Job monitoring
+   962→   962→
+   963→   963→---
+   964→   964→
+   965→   965→### 59. Soft Delete vs Hard Delete
+   966→   966→- When user deletes something, is it gone forever or recoverable?
+   967→   967→- This decision affects the entire database schema
+   968→   968→- Soft delete adds deleted_at column — data stays but is hidden
+   969→   969→- Hard delete removes permanently
+   970→   970→
+   971→   971→---
+   972→   972→
+   973→   973→### 60. Collaboration Features
+   974→   974→- Multiple users editing same data?
+   975→   975→- Presence indicators (who is online)?
+   976→   976→- Conflict resolution strategy?
+   977→   977→- Locking (only one user can edit at a time)?
+   978→   978→- Comments on records?
+   979→   979→
+   980→   980→---
+   981→   981→
+   982→   982→### 61. Webhooks (Outgoing)
+   983→   983→- Does your app need to notify external services?
+   984→   984→- What events trigger webhooks?
+   985→   985→- Payload structure
+   986→   986→- Retry logic on failure
+   987→   987→- Webhook secret for verification
+   988→   988→
+   989→   989→---
+   990→   990→
+   991→   991→### 62. Timezone & Localization
+   992→   992→- Dates stored in UTC in database (always)
+   993→   993→- Dates displayed in user's local timezone
+   994→   994→- Currency display per user location
+   995→   995→- Number formatting (comma vs period for decimals)
+   996→   996→
+   997→   997→---
+   998→   998→
+   999→   999→### 63. Rate Limiting & Abuse Prevention
+  1000→  1000→- API rate limiting (Upstash Redis)
+  1001→  1001→- Form submission throttling
+  1002→  1002→- Login attempt limiting
+  1003→  1003→- Bot protection (Turnstile, hCaptcha)
+  1004→  1004→- IP blocking strategy
+  1005→  1005→
+  1006→  1006→---
+  1007→  1007→
+  1008→  1008→### 64. Multi-step Flows & Wizards
+  1009→  1009→- Any complex multi-step processes? (checkout, onboarding, setup)
+  1010→  1010→- Progress saved between steps?
+  1011→  1011→- Back button behavior
+  1012→  1012→- Validation per step or at end?
+  1013→  1013→
+  1014→  1014→---
+  1015→  1015→
+  1016→  1016→---
+  1017→  1017→
+  1018→  1018→## SECTION D — MOBILE / DESKTOP APP SPECIFIC
+  1019→  1019→
+  1020→  1020→---
+  1021→  1021→
+  1022→  1022→### 65. Platform Targets
+  1023→  1023→- iOS, Android, Desktop (Windows/Mac/Linux), or all?
+  1024→  1024→- Native or hybrid? (Capacitor, Tauri, Expo)
+  1025→  1025→- Minimum OS versions supported?
+  1026→  1026→
+  1027→  1027→---
+  1028→  1028→
+  1029→  1029→### 66. App Store & Distribution
+  1030→  1030→- App Store (Apple) submission plan
+  1031→  1031→- Play Store (Google) submission plan
+  1032→  1032→- Developer account setup
+  1033→  1033→- App signing and certificates
+  1034→  1034→- Review process timeline (Apple takes 1-3 days)
+  1035→  1035→
+  1036→  1036→---
+  1037→  1037→
+  1038→  1038→### 67. Push Notifications (Mobile)
+  1039→  1039→- Native push notifications (FCM for Android, APNs for iOS)
+  1040→  1040→- Permission request flow (when and how to ask)
+  1041→  1041→- Notification categories
+  1042→  1042→- Deep linking from notification
+  1043→  1043→
+  1044→  1044→---
+  1045→  1045→
+  1046→  1046→### 68. Device Features
+  1047→  1047→- Camera access needed?
+  1048→  1048→- Microphone access?
+  1049→  1049→- GPS/Location?
+  1050→  1050→- Contacts access?
+  1051→  1051→- Biometric authentication (fingerprint, Face ID)?
+  1052→  1052→- Each requires explicit permission handling
+  1053→  1053→
+  1054→  1054→---
+  1055→  1055→
+  1056→  1056→### 69. Offline Mode (Mobile)
+  1057→  1057→- What works without internet?
+  1058→  1058→- Local data storage (SQLite, AsyncStorage)
+  1059→  1059→- Sync strategy when connection returns
+  1060→  1060→- Conflict resolution on sync
+  1061→  1061→- (Critical for Nigerian context)
+  1062→  1062→
+  1063→  1063→---
+  1064→  1064→
+  1065→  1065→### 70. App Updates
+  1066→  1066→- Force update strategy (block old versions)
+  1067→  1067→- Over-the-air updates (Expo OTA, CodePush)
+  1068→  1068→- Migration strategy for breaking changes
+  1069→  1069→- Changelog shown to user on update?
+  1070→  1070→
+  1071→  1071→---
+  1072→  1072→
+  1073→  1073→### 71. Deep Linking
+  1074→  1074→- URL scheme for opening specific screens from outside
+  1075→  1075→- Universal links (iOS) and App Links (Android)
+  1076→  1076→- Sharing content that opens in app
+  1077→  1077→
+  1078→  1078→---
+  1079→  1079→
+  1080→  1080→### 72. Performance (Mobile Specific)
+  1081→  1081→- App startup time target
+  1082→  1082→- Memory usage limits
+  1083→  1083→- Battery usage optimization
+  1084→  1084→- Large list rendering (FlatList, virtualization)
+  1085→  1085→- Image caching strategy
+  1086→  1086→
+  1087→  1087→---
+  1088→  1088→
+  1089→  1089→---
+  1090→  1090→
+  1091→  1091→## SECTION E — UNIVERSAL ADVANCED AREAS
+  1092→  1092→
+  1093→  1093→---
+  1094→  1094→
+  1095→  1095→### 73. Progress Tracking (Build Time)
+  1096→  1096→- Before any multi-step task, write a checklist to file
+  1097→  1097→- Every completed step gets marked
+  1098→  1098→- If session dies, reopen and continue from last checkpoint
+  1099→  1099→- Never lose build progress
+  1100→  1100→
+  1101→  1101→---
+  1102→  1102→
+  1103→  1103→### 74. Session Recovery
+  1104→  1104→- After any interruption, first action is reload all MD/rule files
+  1105→  1105→- Write session log after every meaningful action
+  1106→  1106→- Log contains: what was done, what's next, decisions made
+  1107→  1107→- Session is always resumable
+  1108→  1108→
+  1109→  1109→---
+  1110→  1110→
+  1111→  1111→### 75. Constraint Identification
+  1112→  1112→- Before planning, surface all real-world constraints
+  1113→  1113→- Budget limits, hosting limits, third party API restrictions
+  1114→  1114→- Nigerian context constraints (payment providers, connectivity)
+  1115→  1115→- Hardware constraints (client's device capabilities)
+  1116→  1116→- Identify constraints BEFORE architecture decisions
+  1117→  1117→
+  1118→  1118→---
+  1119→  1119→
+  1120→  1120→### 76. Scalability Planning
+  1121→  1121→- What is the expected traffic at launch?
+  1122→  1122→- When does the current stack break?
+  1123→  1123→- What is the upgrade path when you outgrow it?
+  1124→  1124→- Database indexing strategy for growth
+  1125→  1125→- CDN strategy
+  1126→  1126→
+  1127→  1127→---
+  1128→  1128→
+  1129→  1129→### 77. Security
+  1130→  1130→- HTTPS enforced everywhere
+  1131→  1131→- Input sanitization (prevent XSS, SQL injection)
+  1132→  1132→- CORS configuration
+  1133→  1133→- Auth token storage (httpOnly cookies, not localStorage)
+  1134→  1134→- Dependency vulnerability scanning
+  1135→  1135→- What data is sensitive and how is it protected?
+  1136→  1136→
+  1137→  1137→---
+  1138→  1138→
+  1139→  1139→### 78. Landing Page vs App Shell
+  1140→  1140→- Even web apps have a public-facing landing page
+  1141→  1141→- Different caching rules for public vs authenticated pages
+  1142→  1142→- Different SEO requirements
+  1143→  1143→- Separate deployment or same codebase?
+  1144→  1144→
+  1145→  1145→---
+  1146→  1146→
+  1147→  1147→### 79. Design Tokens & Theming
+  1148→  1148→- CSS variables for all design values
+  1149→  1149→- Light and dark mode token sets
+  1150→  1150→- How themes switch (class on html, CSS media query)
+  1151→  1151→- Token naming convention (--color-primary, not --blue)
+  1152→  1152→
+  1153→  1153→---
+  1154→  1154→
+  1155→  1155→### 80. Third Party Integrations
+  1156→  1156→- Email (Resend, SendGrid)
+  1157→  1157→- SMS (Termii for Nigeria, Twilio)
+  1158→  1158→- Maps (Google Maps, Mapbox)
+  1159→  1159→- Analytics (Posthog, GA4)
+  1160→  1160→- Social login (Google, GitHub)
+  1161→  1161→- Customer support chat (Crisp, Intercom)
+  1162→  1162→- Each integration: register account, get keys, add to .env.example BEFORE build starts
+  1163→  1163→
+  1164→  1164→---
+  1165→  1165→
+  1166→  1166→## SUMMARY COUNT
+  1167→  1167→| Section | Areas |
+  1168→  1168→|---|---|
+  1169→  1169→| A — All Projects | 01 — 35 |
+  1170→  1170→| B — E-Commerce | 34 — 42 |
+  1171→  1171→| C — Web Apps | 43 — 64 |
+  1172→  1172→| D — Mobile/Desktop | 65 — 72 |
+  1173→  1173→| E — Universal Advanced | 73 — 80 |
+  1174→  1174→| **Total** | **82 Areas** |
+  1175→  1175→
+  1176→  1176→---
+  1177→  1177→
+  1178→  1178→*Last updated: June 2026*
+  1179→  1179→*Purpose: WebForge Kickoff System — Victor Makuo*
+  1180→  1180→
+  1181→  1181→
+  1182→  1182→I'm trying to build an application that will help me to create web applications. I'm a developer. There are a lot of things in web applications that are difficult and I want to implement this looping engineering system. The five looping engineering, that's the automation, the work tree, the connectors, that's my connectors, that's plugins and MCPs, the skills empty and the sub-agents. These five things. And also memory. So the way I want to handle this thing is by having an orchestration and wrapping these five parts, six parts around this application. The hybrid organization, example Hermes will be the one in charge of the automation, scheduling and triggering other sub-agents to work. Different sub-agents can work in parallel. That is work tree. You understand? For connectors and plugins, those ones are external. And a different agent will have access to different MCPs. You understand? Then for skills, different agents will have different skills to it. So this way it is easier for me to be able to optimize. Because if I'm optimizing, I'm optimizing a particular agent, not optimizing the system. That way I can easily not cause clashes. Because if I write too much scalable file, it's going to cause rule clash. You understand? But if I separate it into agents, then there is little to no rule clashes. You understand? So I'm going to, there are 82 areas we consider when building web applications. Now these standards are not final. We can drop some things and take some things, but they are what we build upon. We cannot start discarding and using based on what we are building. You understand? These areas, they are not yet, these agents are not yet confirmed. I'm giving you this so you understand what I'm saying and you can propose a plan for me. Another thing is, for now, mostly I build my front-end out of the system because most of them are sites that I like and I want to clone or designs I like and I want to clone it. Or I use screenshot of the taken HTML file of it. And because of that, my system does not have the model does not have vision capabilities. So I cannot run it outside the system. So once I have it outside, there's no agent that is going to handle that. Uh-huh. Then, so I just tell you all these things. And then another thing. Let me get the 82 areas. So these are the attitude areas. You understand? These are the attitude areas that we always consider when building web applications. You understand? So I want you to help me to organize this thing and tell me how we are going to like, I want us to plan. Let's not start creating anything. Let's first plan this thing. Let's, this is very important. I'm tired of a lot of things. And you know, I think this is going to help me. So I want to plan this thing very well. So please, when we are making this plan, try to use simple words to talk to me. You understand? I am a self-taught developer. I learn things, but I didn't learn by reading. I didn't learn terminologies. So when you use simple words, I tend to understand you better than when you use all these terminologies to me.
