@@ -214,9 +214,22 @@ hr_dept = node("Voss","HR Director",dept="HR",
         node("Weld","Assignment Officer",dept="HR",
             function="Assigns newly recruited agents to requesting departments"),
     ])
+# Meta Engineering Department — maintains WebForge itself
+meta_dept = node("Daedalus","Meta Engineering Director",dept="Meta",
+    function="Heads Meta Engineering — maintains WebForge itself. Builds new MCPs, fixes bugs, creates agents.",
+    children=[
+        node("Forge","MCP Builder",dept="Meta",
+            function="Builds new MCPs when WebForge needs new capabilities"),
+        node("Anvil","MCP Fixer",dept="Meta",
+            function="Fixes bugs in existing MCPs"),
+        node("Loom","Agent Creator",dept="Meta",
+            function="Creates new named agents when HR needs more (works with Rook)"),
+        node("Compass","System Tester",dept="Meta",
+            function="Tests the whole WebForge system to find issues before they break projects"),
+    ])
 hermes = node("Hermes","COO / Scheduler",dept="Executive",
     function="Automaton: wakes agents, manages handovers, monitors stalls",
-    children=[hr_dept])
+    children=[hr_dept, meta_dept])
 ceo = node("CEO","Chief Executive Officer",dept="Executive",
     function="Oversees all departments, coordinates strategy, final decisions",
     children=[hermes, intelligence_dept, build_dept, quality_dept, documentation_dept])
@@ -256,7 +269,7 @@ html = """<!DOCTYPE html>
     --text-muted: #94A3B8;
     --border: #475569;
     --exec: #A78BFA; --intel: #60A5FA; --build: #34D399;
-    --quality: #FB7185; --docs: #FBBF24; --hr: #22D3EE;
+    --quality: #FB7185; --docs: #FBBF24; --hr: #22D3EE; --meta: #F472B6;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: var(--bg); color: var(--text);
@@ -341,6 +354,7 @@ html = """<!DOCTYPE html>
   .dept-Build > circle { fill: var(--build); stroke: #059669; }
   .dept-Quality > circle { fill: var(--quality); stroke: #E11D48; }
   .dept-Documentation > circle { fill: var(--docs); stroke: #D97706; }
+  .dept-Meta > circle { fill: var(--meta); stroke: #DB2777; }
 
   .node.has-mcps circle { stroke-width: 3px; }
   .node.highlighted > circle { stroke: #fff; stroke-width: 3px;
@@ -407,6 +421,7 @@ html = """<!DOCTYPE html>
   <h3>Departments</h3>
   <div class="legend-item"><div class="legend-dot" style="background:var(--exec)"></div>Executive</div>
   <div class="legend-item"><div class="legend-dot" style="background:var(--hr)"></div>HR</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--meta)"></div>Meta Engineering (NEW)</div>
   <div class="legend-item"><div class="legend-dot" style="background:var(--intel)"></div>Intelligence</div>
   <div class="legend-item"><div class="legend-dot" style="background:var(--build)"></div>Build</div>
   <div class="legend-item"><div class="legend-dot" style="background:var(--quality)"></div>Quality Council</div>
@@ -428,7 +443,7 @@ const TIER_NAMES = __TIER_NAMES__;
 
 // Populate tier filter
 const filterBar = document.getElementById('mcp-filter');
-for (let t = 1; t <= 7; t++) {
+for (let t = 1; t <= 8; t++) {
   const chip = document.createElement('span');
   chip.className = 'tier-chip';
   chip.setAttribute('data-tier', t);

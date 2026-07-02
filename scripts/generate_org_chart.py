@@ -318,9 +318,23 @@ hr_dept = node("Voss", "HR Director", dept="HR",
             function="Assigns newly recruited agents to the department that requested them. Tracks who is working on what."),
     ])
 
+# Meta Engineering Department — maintains WebForge itself
+meta_dept = node("Daedalus", "Meta Engineering Director", dept="Meta",
+    function="Heads Meta Engineering — maintains WebForge itself. Builds new MCPs, fixes bugs, creates agents, tests the system.",
+    children=[
+        node("Forge", "MCP Builder", dept="Meta",
+            function="Builds new MCPs when WebForge needs new capabilities."),
+        node("Anvil", "MCP Fixer", dept="Meta",
+            function="Fixes bugs in existing MCPs."),
+        node("Loom", "Agent Creator", dept="Meta",
+            function="Creates new named agents when HR needs more (works with Rook)."),
+        node("Compass", "System Tester", dept="Meta",
+            function="Tests the whole WebForge system to find issues before they break projects."),
+    ])
+
 hermes = node("Hermes", "COO / Scheduler", dept="Executive",
-    function="Automaton: wakes agents in sequence, manages handovers, monitors stalls. HR reports to Hermes.",
-    children=[hr_dept])
+    function="Automaton: wakes agents in sequence, manages handovers, monitors stalls. HR and Meta Engineering report to Hermes.",
+    children=[hr_dept, meta_dept])
 
 ceo = node("CEO", "Chief Executive Officer", dept="Executive",
     function="Oversees all departments, coordinates strategy, makes final decisions",
@@ -365,6 +379,7 @@ html = """<!DOCTYPE html>
     --quality: #FB7185;
     --docs: #FBBF24;
     --hr: #22D3EE;
+    --meta: #F472B6;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -483,6 +498,7 @@ html = """<!DOCTYPE html>
   .dept-Quality > circle { fill: var(--quality); stroke: #E11D48; }
   .dept-Documentation > circle { fill: var(--docs); stroke: #D97706; }
   .dept-HR > circle { fill: var(--hr); stroke: #0891B2; }
+  .dept-Meta > circle { fill: var(--meta); stroke: #DB2777; }
 
   .node.highlighted > circle {
     stroke: #fff; stroke-width: 3px;
@@ -544,6 +560,7 @@ html = """<!DOCTYPE html>
   <h3>Departments</h3>
   <div class="legend-item"><div class="legend-dot" style="background:var(--exec)"></div>Executive (CEO, Hermes)</div>
   <div class="legend-item"><div class="legend-dot" style="background:var(--hr)"></div>HR (Voss, Rook, Weld)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--meta)"></div>Meta Engineering (Daedalus, Forge, Anvil, Loom, Compass)</div>
   <div class="legend-item"><div class="legend-dot" style="background:var(--intel)"></div>Intelligence (38)</div>
   <div class="legend-item"><div class="legend-dot" style="background:var(--build)"></div>Build (69)</div>
   <div class="legend-item"><div class="legend-dot" style="background:var(--quality)"></div>Quality Council (108)</div>

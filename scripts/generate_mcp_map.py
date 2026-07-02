@@ -25,6 +25,7 @@ from mcp_data import MCPS, TIER_COLORS, TIER_NAMES
 DEPT_COLORS = {
     "Executive": "#A78BFA",
     "HR": "#22D3EE",
+    "Meta": "#F472B6",
     "Intelligence": "#60A5FA",
     "Build": "#34D399",
     "Quality": "#FB7185",
@@ -47,6 +48,8 @@ def resolve_owner(owner, mcp_name):
     dept_map = {
         "Hermes": "Executive", "CEO": "Executive",
         "Voss": "HR", "Rook": "HR", "Weld": "HR",
+        "Daedalus": "Meta", "Forge": "Meta", "Anvil": "Meta",
+        "Loom": "Meta", "Compass": "Meta",
         "Athena": "Intelligence", "Dorian": "Intelligence",
         "Odin Team": "Intelligence",
         "Hephaestus": "Build", "Aurora": "Build", "Titan": "Build",
@@ -258,10 +261,12 @@ html = """<!DOCTYPE html>
   <div class="legend-item"><div class="legend-dot" style="background:#22D3EE"></div>T5 Research</div>
   <div class="legend-item"><div class="legend-dot" style="background:#A78BFA"></div>T6 Runtime</div>
   <div class="legend-item"><div class="legend-dot" style="background:#94A3B8"></div>T7 Specialized</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#F472B6"></div>T8 Meta Engineering (NEW)</div>
   <div class="legend-section">
     <h3>Agents (by Dept)</h3>
     <div class="legend-item"><div class="legend-dot" style="background:#A78BFA"></div>Executive</div>
     <div class="legend-item"><div class="legend-dot" style="background:#22D3EE"></div>HR</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#F472B6"></div>Meta Engineering (NEW)</div>
     <div class="legend-item"><div class="legend-dot" style="background:#60A5FA"></div>Intelligence</div>
     <div class="legend-item"><div class="legend-dot" style="background:#34D399"></div>Build</div>
     <div class="legend-item"><div class="legend-dot" style="background:#FB7185"></div>Quality</div>
@@ -280,7 +285,7 @@ const DEPT_COLORS = __DEPT_COLORS__;
 
 // Populate tier filter
 const filterBar = document.getElementById('tier-filter');
-for (let t = 1; t <= 7; t++) {
+for (let t = 1; t <= 8; t++) {
   const chip = document.createElement('span');
   chip.className = 'tier-chip';
   chip.setAttribute('data-tier', t);

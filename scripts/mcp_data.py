@@ -65,6 +65,14 @@ MCPS = [
     {"id": "m44", "name": "Form MCP",                 "owner": "Build Team",     "tier": 7, "job": "Form handling, validation, file uploads"},
     {"id": "m45", "name": "i18n MCP",                 "owner": "Build Team",     "tier": 7, "job": "Translations, locale formatting"},
     {"id": "m46", "name": "Feature Flag MCP",         "owner": "Build Team",     "tier": 7, "job": "Toggle features without deploying"},
+
+    # ── Tier 8 — Meta Engineering (NEW) ──
+    # These MCPs are owned by the Meta department — they maintain WebForge itself.
+    {"id": "m47", "name": "MCP Builder MCP",          "owner": "Forge",          "tier": 8, "job": "Forge uses this to scaffold new MCPs. Generates boilerplate, info(), run(), CLI blocks."},
+    {"id": "m48", "name": "MCP Fixer MCP",            "owner": "Anvil",          "tier": 8, "job": "Anvil uses this to apply targeted patches to MCP code. Patches are tested before apply."},
+    {"id": "m49", "name": "Agent Creator MCP",        "owner": "Loom",           "tier": 8, "job": "Loom uses this to scaffold new agent skill MD files following the standard template."},
+    {"id": "m50", "name": "System Tester MCP",        "owner": "Compass",        "tier": 8, "job": "Compass uses this to run automated tests against every MCP, skill file, and pipeline state."},
+    {"id": "m51", "name": "System Memory MCP",        "owner": "Daedalus",       "tier": 8, "job": "Writes to ~/webforge/system-memory/ — Meta dept's own memory about WebForge improvements."},
 ]
 
 # ── Tier colors (for badges) ──
@@ -76,6 +84,7 @@ TIER_COLORS = {
     5: "#22D3EE",  # cyan — research
     6: "#A78BFA",  # purple — runtime
     7: "#94A3B8",  # gray — specialized
+    8: "#F472B6",  # pink — meta engineering (NEW)
 }
 
 TIER_NAMES = {
@@ -86,6 +95,7 @@ TIER_NAMES = {
     5: "Research & External",
     6: "Runtime & Infra",
     7: "Specialized",
+    8: "Meta Engineering",
 }
 
 # ── Map owner string → list of MCPs ──
@@ -144,7 +154,7 @@ def mcps_for_agent(agent_name, agent_dept=None, agent_role=None):
 # ── Summary stats ──
 if __name__ == "__main__":
     print(f"Total MCPs: {len(MCPS)}")
-    for tier in range(1, 8):
+    for tier in range(1, 9):
         count = sum(1 for m in MCPS if m["tier"] == tier)
         print(f"  Tier {tier} ({TIER_NAMES[tier]}): {count}")
 
