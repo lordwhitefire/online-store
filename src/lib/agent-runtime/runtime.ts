@@ -19,7 +19,7 @@
  * Uses Vercel AI SDK's streamText with maxSteps for the loop.
  */
 
-import { streamText, tool, jsonSchema, type Tool, type CoreMessage } from "ai";
+import { generateText, tool, jsonSchema, type Tool, type CoreMessage, isStepCount } from "ai";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { readFileSync } from "fs";
 import { join } from "path";
@@ -107,22 +107,30 @@ export async function runAgent(options: RuntimeOptions): Promise<RuntimeResult> 
     { role: "user" as const, content: message },
   ];
 
-  // 5. Call LLM with the loop
+  // 5. Call LLM with the loop (using generateText for synchronous multi-step)
   const provider = getProvider(config.model);
   const toolCalls: Array<{ name: string; input: unknown; result: unknown }> = [];
 
-  const result = streamText({
+  const result = await generateText({
     model: provider,
     system: fullSystemPrompt,
     messages,
     tools,
-    maxSteps,
+    stopWhen: isStepCount(maxSteps),
     temperature: 0.7,
     maxOutputTokens: 4096,
+    prepareStep: async ({ steps }) => {
+      const completedSteps = steps.length;
+      console.log(`[Runtime] ${agentName} prepareStep: ${completedSteps} completed`);
+      if (completedSteps < 3) {
+        return { toolChoice: "required" as const };
+      }
+      return { toolChoice: "auto" as const };
+    },
     onStepFinish: (event) => {
+      console.log(`[Runtime] ${agentName} step finished: ${event.toolCalls?.length || 0} tool calls, text=${event.text?.slice(0, 50) || "(none)"}`);
       if (event.toolCalls) {
         for (const tc of event.toolCalls) {
-          console.log(`[Runtime] ${agentName} called tool: ${tc.toolName}`);
           toolCalls.push({ name: tc.toolName, input: tc.input, result: null });
         }
       }
@@ -138,15 +146,17 @@ export async function runAgent(options: RuntimeOptions): Promise<RuntimeResult> 
     },
   });
 
-  // 6. Wait for completion and get final text
-  const finalResult = await result;
-  const text = await finalResult.text;
+  // 6. Get final text
+  const text = result.text;
+  const stepCount = result.steps?.length || toolCalls.length;
+
+  console.log(`[Runtime] ${agentName} completed: ${stepCount} steps, ${toolCalls.length} tool calls`);
 
   return {
     text,
     toolCalls,
     model: config.model,
-    steps: finalResult.steps,
+    steps: stepCount,
   };
 }
 
@@ -190,10 +200,12 @@ function buildToolHint(config: AgentConfig): string {
   }
 
   lines.push("");
-  lines.push("## Important");
-  lines.push("- When you call a tool, the result will be fed back to you automatically.");
-  lines.push("- You can call multiple tools in sequence — think about what you need to do step by step.");
-  lines.push("- After all tool calls are done, give a final response to the user.");
+  lines.push("## Important — Tool Loop");
+  lines.push("- When you call a tool, the result is fed back to you automatically.");
+  lines.push("- You can call multiple tools in sequence — DON'T stop after one tool call.");
+  lines.push("- After each tool result, ask yourself: 'Is there more I need to do?'");
+  lines.push("- If yes, call the next tool. If no, give your final response.");
+  lines.push("- Example: create a task → then delegate it → then respond to the user.");
 
   return lines.join("\n");
 }

@@ -3,7 +3,7 @@ import { runAgent } from "@/lib/agent-runtime/runtime";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 /**
  * POST /api/agent/run
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     const result = await runAgent({
       agentName: agent,
       message,
-      maxSteps: 5,
+      maxSteps: body?.maxSteps || 8,
     });
 
     return NextResponse.json({
