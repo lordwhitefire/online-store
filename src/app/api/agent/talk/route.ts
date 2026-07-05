@@ -20,17 +20,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: false, error: "Missing 'agent' or 'message'" }, { status: 400 });
     }
 
-    // Start the agent loop in the background
-    runAgent({ agentName: agent, message, maxSteps: 5 })
-      .then(result => console.log(`[API] /api/agent/talk: ${agent} completed — ${result.steps} steps`))
-      .catch(e => console.error(`[API] /api/agent/talk: ${agent} failed:`, e));
+    const result = await runAgent({ agentName: agent, message, maxSteps: 5 });
+    console.log(`[API] /api/agent/talk: ${agent} completed — ${result.steps} steps`);
 
     return NextResponse.json({
       ok: true,
       agent,
-      reply: "Agent runtime started. The agent is thinking...",
+      reply: result.text,
     });
   } catch (e) {
+    console.error(`[API] /api/agent/talk: error:`, e);
     return NextResponse.json({ ok: false, error: e instanceof Error ? e.message : "Unknown" }, { status: 500 });
   }
 }
