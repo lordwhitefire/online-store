@@ -591,7 +591,13 @@ async function agentLoop(
 ): Promise<RuntimeResult> {
   // 1. Load config
   const config = loadAgentConfig(agentName);
-  console.log(`[Loop] ${agentName} starting (role: ${config.roleTier}, dept: ${config.department})`);
+
+  // 1b. WAKE CHECK — if agent is sleeping, wake them up
+  const currentState = await getAgentState(agentName);
+  if (currentState === "sleeping") {
+    console.log(`[Loop] ${agentName} WAKING UP from sleep`);
+  }
+  console.log(`[Loop] ${agentName} starting (role: ${config.roleTier}, dept: ${config.department}, was: ${currentState})`);
 
   // 2. Build system prompt
   const systemPrompt = buildSystemPrompt(config);
@@ -601,7 +607,7 @@ async function agentLoop(
   const toolDefs = buildToolDefs(config);
   console.log(`[Loop] ${agentName} tools: ${Object.keys(toolDefs).join(", ")}`);
 
-  // 4. Set state to active
+  // 4. Set state to active (WAKE UP)
   await setAgentState(agentName, "active");
 
   // 5. Initialize messages
@@ -623,7 +629,19 @@ async function agentLoop(
     // Case A: LLM returned text only (no tool calls) → DONE
     if (!response.toolCalls || response.toolCalls.length === 0) {
       console.log(`[Loop] ${agentName} done — text response (no more tool calls)`);
-      await setAgentState(agentName, "sleeping");
+
+      // SLEEP CHECK: can this agent sleep?
+      // Rule: sleep ONLY when (job done) AND (no subordinates still working)
+      const canSleep = await canAgentSleep(config);
+      if (canSleep) {
+        await setAgentState(agentName, "sleeping");
+        console.log(`[Loop] ${agentName} going to SLEEP (job done, no subordinates watching)`);
+      } else {
+        // Still has subordinates working — stay active but waiting
+        await setAgentState(agentName, "waiting");
+        console.log(`[Loop] ${agentName} staying AWAKE (subordinates still working)`);
+      }
+
       return {
         text: response.content || "(no response)",
         toolCalls: allToolCalls,
@@ -685,13 +703,56 @@ async function agentLoop(
 
   // Max iterations reached
   console.log(`[Loop] ${agentName} hit max iterations (${maxIterations})`);
-  await setAgentState(agentName, "sleeping");
+
+  // SLEEP CHECK for max-iterations case too
+  const canSleep = await canAgentSleep(config);
+  if (canSleep) {
+    await setAgentState(agentName, "sleeping");
+  } else {
+    await setAgentState(agentName, "waiting");
+  }
+
   return {
     text: `(reached max iterations: ${maxIterations})`,
     toolCalls: allToolCalls,
     model: MODEL,
     steps,
   };
+}
+
+// ── Sleep check ──
+//
+// An agent can sleep ONLY when:
+//   1. It has finished its job (the loop is ending)
+//   2. It has NO subordinates that are still active or waiting
+//
+// If any subordinate is active/waiting/no_response, the agent stays awake
+// (in "waiting" state) to continue monitoring them.
+
+async function canAgentSleep(config: AgentConfig): Promise<boolean> {
+  // Workers (juniors) have no subordinates — they can always sleep when done
+  if (config.subordinates.length === 0) {
+    return true;
+  }
+
+  // Check if any subordinate is still active/waiting/no_response
+  for (const subName of config.subordinates) {
+    const subState = await getAgentState(subName);
+    if (subState === "active" || subState === "waiting" || subState === "no_response") {
+      console.log(`[Sleep] ${config.name} CANNOT sleep — subordinate ${subName} is ${subState}`);
+      return false;
+    }
+  }
+
+  // Also check the watching list — if we're watching anyone, we can't sleep
+  const watching = await getAgentWatching(config.name);
+  if (watching.length > 0) {
+    console.log(`[Sleep] ${config.name} CANNOT sleep — still watching ${watching.length} subordinate(s)`);
+    return false;
+  }
+
+  console.log(`[Sleep] ${config.name} CAN sleep — all subordinates done/sleeping`);
+  return true;
 }
 
 // ── System prompt builder ──
