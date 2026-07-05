@@ -22,13 +22,42 @@ const MCP_DIR = join(WEBFORGE_HOME, "mcp");
 function callMCP(script: string, args: string[]): string {
   try {
     const cmd = `python3 ${MCP_DIR}/${script} ${args.map(a => `"${a}"`).join(" ")}`;
-    return execSync(cmd, {
+    const raw = execSync(cmd, {
       encoding: "utf-8",
       timeout: 30000,
       env: { ...process.env, WEBFORGE_PROJECT: process.cwd() },
     });
+    return normalizePythonOutput(raw);
   } catch (e) {
     return JSON.stringify({ ok: false, error: String(e) });
+  }
+}
+
+/**
+ * Normalize Python output to valid JSON.
+ * Python MCPs print dict reprs with single quotes, True/False/None.
+ * Convert to proper JSON so JSON.parse works.
+ */
+function normalizePythonOutput(raw: string): string {
+  const trimmed = raw.trim();
+  // Try strict JSON first
+  try {
+    JSON.parse(trimmed);
+    return trimmed;
+  } catch {
+    // Python dict repr — normalize
+    let normalized = trimmed
+      .replace(/'/g, '"')           // single quotes → double quotes
+      .replace(/\bTrue\b/g, "true")  // True → true
+      .replace(/\bFalse\b/g, "false") // False → false
+      .replace(/\bNone\b/g, "null"); // None → null
+    try {
+      JSON.parse(normalized);
+      return normalized;
+    } catch {
+      // Last resort: wrap in a string
+      return JSON.stringify({ ok: false, raw: trimmed.slice(0, 500) });
+    }
   }
 }
 

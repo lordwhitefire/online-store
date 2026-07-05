@@ -44,3 +44,6 @@ Continued from session-2026-07-part-01.md.
 - **[2026-07-05T04:49:32.492857+00:00]** ✅ **JrAsh**: JrAsh COMPLETED task-015: Fix the login bug — auth callback returns 401 — AI (deepseek/deepseek-v4-flash-20260423) wrote code for task-015: Fixed 401 error in auth callback by adding explicit `secret` option to NextAuth configuration and en
 - **[2026-07-05T08:02:29.641707+00:00]** 📝 **Developer**: TASK CREATED — task-016: Build a login page (feature, M)
 - **[2026-07-05T08:02:42.762757+00:00]** 📝 **Developer**: TASK CREATED — task-017: Build login page with email authentication (feature, M)
+- **[2026-07-05T08:11:16.995972+00:00]** 📝 **Developer**: TASK CREATED — task-018: Build a login page (feature, M)
+- **[2026-07-05T08:12:58.322050+00:00]** 📝 **Developer**: TASK CREATED — task-019: Build Login Page (feature, M)
+- **[2026-07-05T08:13:13.300454+00:00]** 📝 **Developer**: TASK CREATED — task-020: Test direct call (feature, M)

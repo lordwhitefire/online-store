@@ -19,7 +19,7 @@
  * Uses Vercel AI SDK's streamText with maxSteps for the loop.
  */
 
-import { streamText, type Tool, type CoreMessage } from "ai";
+import { streamText, tool, jsonSchema, type Tool, type CoreMessage } from "ai";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { readFileSync } from "fs";
 import { join } from "path";
@@ -93,7 +93,9 @@ export async function runAgent(options: RuntimeOptions): Promise<RuntimeResult> 
 
   // 2. Load system prompt from skill file
   const systemPrompt = loadSkillFile(config.skillFile);
-  console.log(`[Runtime] ${agentName} system prompt: ${systemPrompt.length} chars`);
+  const toolHint = buildToolHint(config);
+  const fullSystemPrompt = systemPrompt + "\n\n" + toolHint;
+  console.log(`[Runtime] ${agentName} system prompt: ${fullSystemPrompt.length} chars`);
 
   // 3. Build tools (filtered by agent's tool list + permissions)
   const tools = await buildTools(config, taskId, runId);
@@ -111,7 +113,7 @@ export async function runAgent(options: RuntimeOptions): Promise<RuntimeResult> 
 
   const result = streamText({
     model: provider,
-    system: systemPrompt,
+    system: fullSystemPrompt,
     messages,
     tools,
     maxSteps,
@@ -162,6 +164,52 @@ function loadSkillFile(skillFile: string): string {
   }
 }
 
+// ── Tool hint builder ──
+//
+// Tells the LLM what tools it has and how to use them.
+// This is added to the system prompt so the LLM knows its capabilities.
+
+function buildToolHint(config: AgentConfig): string {
+  const lines: string[] = [];
+  lines.push("## Available Tools");
+  lines.push("You have the following tools available. Call them when needed:");
+  lines.push("");
+
+  for (const toolName of config.tools) {
+    const desc = TOOL_DESCRIPTIONS[toolName] || toolName;
+    lines.push(`- **${toolName}**: ${desc}`);
+  }
+
+  if (config.roleTier === "director" || config.roleTier === "lead") {
+    lines.push("");
+    lines.push("## Delegation");
+    lines.push("You have a `task.delegate` tool. Use it to assign work to your subordinates.");
+    lines.push(`Your direct subordinates: ${config.subordinates.join(", ")}`);
+    lines.push("When you create a task, also delegate it to the right subordinate using task.delegate.");
+    lines.push("The subordinate will run their own agent runtime and return a result.");
+  }
+
+  lines.push("");
+  lines.push("## Important");
+  lines.push("- When you call a tool, the result will be fed back to you automatically.");
+  lines.push("- You can call multiple tools in sequence — think about what you need to do step by step.");
+  lines.push("- After all tool calls are done, give a final response to the user.");
+
+  return lines.join("\n");
+}
+
+const TOOL_DESCRIPTIONS: Record<string, string> = {
+  "task.create": "Create a new task on the Kanban board",
+  "task.list": "List tasks on the board (optionally filtered by status)",
+  "task.show": "Show details of a specific task",
+  "task.delegate": "Delegate a task to a subordinate agent — they will run their own runtime and return a result",
+  "mailbox.send": "Send a message to another agent (must be your direct superior or subordinate)",
+  "mailbox.read": "Read your inbox — list unread messages addressed to you",
+  "file.read": "Read a file from the project",
+  "file.write": "Write content to a file in the project",
+  "git.commit": "Commit changes to git",
+};
+
 // ── Tool builder ──
 
 async function buildTools(
@@ -182,5 +230,116 @@ async function buildTools(
     }
   }
 
+  // Add task.delegate tool for directors and leads (built here to access runAgent)
+  if (config.roleTier === "director" || config.roleTier === "lead") {
+    filtered["task.delegate"] = createDelegateTool(config);
+  }
+
   return filtered;
+}
+
+// ── task.delegate tool ──
+//
+// Follows OpenCode's task tool pattern (packages/opencode/src/tool/task.ts):
+//   1. Takes description, prompt, subagent_type
+//   2. Looks up the subagent config
+//   3. Checks that subagent_type is a direct subordinate (chain of command)
+//   4. Runs the subagent's runtime (recursive runAgent call)
+//   5. Returns the result wrapped in <task> tags
+//
+// The subagent inherits a restricted permission set:
+//   - Parent's deny rules still apply
+//   - Subagent cannot spawn its own subagents unless it's a director/lead
+
+function createDelegateTool(parentConfig: AgentConfig): Tool {
+  return tool({
+    description:
+      "Delegate a task to a subordinate agent. The subordinate will run their own " +
+      "agent runtime loop, think about the task, call their own tools, and return a result. " +
+      "Use this to assign work down the chain of command. " +
+      "The subordinate must be one of your direct subordinates.",
+    inputSchema: jsonSchema({
+      type: "object",
+      properties: {
+        subagent: {
+          type: "string",
+          description: "The name of the subordinate agent to delegate to (must be your direct subordinate)",
+        },
+        description: {
+          type: "string",
+          description: "A short (3-5 words) description of the task",
+        },
+        prompt: {
+          type: "string",
+          description: "The task prompt for the subordinate agent — what they should do",
+        },
+        task_id: {
+          type: "string",
+          description: "The task ID being delegated (optional)",
+        },
+      },
+      required: ["subagent", "description", "prompt"],
+    }),
+    execute: async (input) => {
+      const subagentName = input.subagent;
+
+      // Chain-of-command check: is this agent a direct subordinate?
+      if (!parentConfig.subordinates.includes(subagentName)) {
+        const chain = parentConfig.subordinates.length > 0
+          ? parentConfig.subordinates.join(", ")
+          : "(no subordinates)";
+        return {
+          ok: false,
+          error: `CHAIN-OF-COMMAND VIOLATION: ${parentConfig.name} cannot delegate to ${subagentName}. ` +
+                 `Direct subordinates are: ${chain}`,
+        };
+      }
+
+      console.log(`[Runtime] ${parentConfig.name} delegating to ${subagentName}: ${input.description}`);
+      console.log(`[Runtime]   Prompt: ${input.prompt.slice(0, 100)}...`);
+
+      try {
+        // Recursive call — the subordinate runs their own runtime loop
+        const result = await runAgent({
+          agentName: subagentName,
+          message: input.prompt,
+          maxSteps: 5, // subagents get fewer steps to prevent infinite loops
+          taskId: input.task_id,
+        });
+
+        // Format output like OpenCode's <task> tags
+        const state = result.text ? "completed" : "error";
+        const output = [
+          `<task agent="${subagentName}" state="${state}">`,
+          `<description>${input.description}</description>`,
+          `<task_result>`,
+          result.text,
+          `</task_result>`,
+          `<task_metadata>`,
+          `  model: ${result.model}`,
+          `  steps: ${typeof result.steps === "number" ? result.steps : 0}`,
+          `  tool_calls: ${result.toolCalls.length}`,
+          result.toolCalls.map(tc => `  - ${tc.name}`).join("\n"),
+          `</task_metadata>`,
+          `</task>`,
+        ].join("\n");
+
+        return {
+          ok: true,
+          output,
+          agent: subagentName,
+          text: result.text,
+          toolCalls: result.toolCalls,
+          steps: result.steps,
+        };
+      } catch (e) {
+        const error = e instanceof Error ? e.message : String(e);
+        return {
+          ok: false,
+          error: `Subagent ${subagentName} failed: ${error}`,
+          output: `<task agent="${subagentName}" state="error">\n<task_error>${error}</task_error>\n</task>`,
+        };
+      }
+    },
+  });
 }
