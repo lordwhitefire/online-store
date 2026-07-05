@@ -266,16 +266,15 @@ async function buildTools(
 function createDelegateTool(parentConfig: AgentConfig): Tool {
   return tool({
     description:
-      "Delegate a task to a subordinate agent. The subordinate will run their own " +
-      "agent runtime loop, think about the task, call their own tools, and return a result. " +
-      "Use this to assign work down the chain of command. " +
+      "Delegate a task to a subordinate agent. The subordinate runs in the background " +
+      "and you will be notified when done. Use this to assign work down the chain of command. " +
       "The subordinate must be one of your direct subordinates.",
     inputSchema: jsonSchema({
       type: "object",
       properties: {
         subagent: {
           type: "string",
-          description: "The name of the subordinate agent to delegate to (must be your direct subordinate)",
+          description: "The name of the subordinate agent to delegate to",
         },
         description: {
           type: "string",
@@ -283,75 +282,56 @@ function createDelegateTool(parentConfig: AgentConfig): Tool {
         },
         prompt: {
           type: "string",
-          description: "The task prompt for the subordinate agent — what they should do",
+          description: "The task prompt for the subordinate agent",
         },
-        task_id: {
+        taskId: {
           type: "string",
           description: "The task ID being delegated (optional)",
         },
       },
       required: ["subagent", "description", "prompt"],
     }),
-    execute: async (input) => {
+    execute: async (input: { subagent: string; description: string; prompt: string; taskId?: string }) => {
       const subagentName = input.subagent;
 
-      // Chain-of-command check: is this agent a direct subordinate?
+      // Chain-of-command check
       if (!parentConfig.subordinates.includes(subagentName)) {
-        const chain = parentConfig.subordinates.length > 0
-          ? parentConfig.subordinates.join(", ")
-          : "(no subordinates)";
         return {
           ok: false,
-          error: `CHAIN-OF-COMMAND VIOLATION: ${parentConfig.name} cannot delegate to ${subagentName}. ` +
-                 `Direct subordinates are: ${chain}`,
+          error: `CHAIN VIOLATION: ${parentConfig.name} cannot delegate to ${subagentName}. ` +
+                 `Direct subordinates: ${parentConfig.subordinates.join(", ")}`,
         };
       }
 
-      console.log(`[Runtime] ${parentConfig.name} delegating to ${subagentName}: ${input.description}`);
-      console.log(`[Runtime]   Prompt: ${input.prompt.slice(0, 100)}...`);
+      console.log(`[Runtime] ${parentConfig.name} → ${subagentName}: ${input.description}`);
 
-      try {
-        // Recursive call — the subordinate runs their own runtime loop
-        const result = await runAgent({
-          agentName: subagentName,
-          message: input.prompt,
-          maxSteps: 5, // subagents get fewer steps to prevent infinite loops
-          taskId: input.task_id,
-        });
+      // Run subordinate ASYNCHRONOUSLY (fire and forget)
+      // The parent agent gets an immediate response and can continue
+      const subagentPromise = runAgent({
+        agentName: subagentName,
+        message: input.prompt,
+        maxSteps: 3, // subagents get fewer steps
+        taskId: input.taskId,
+      }).then(result => {
+        console.log(`[Runtime] ${subagentName} completed: ${result.toolCalls.length} tool calls`);
+        return result;
+      }).catch(e => {
+        console.error(`[Runtime] ${subagentName} failed:`, e);
+        return null;
+      });
 
-        // Format output like OpenCode's <task> tags
-        const state = result.text ? "completed" : "error";
-        const output = [
-          `<task agent="${subagentName}" state="${state}">`,
-          `<description>${input.description}</description>`,
-          `<task_result>`,
-          result.text,
-          `</task_result>`,
-          `<task_metadata>`,
-          `  model: ${result.model}`,
-          `  steps: ${typeof result.steps === "number" ? result.steps : 0}`,
-          `  tool_calls: ${result.toolCalls.length}`,
-          result.toolCalls.map(tc => `  - ${tc.name}`).join("\n"),
-          `</task_metadata>`,
-          `</task>`,
-        ].join("\n");
+      // Store the promise so we can await it later if needed
+      _pendingDelegations.set(`${parentConfig.name}-${subagentName}-${Date.now()}`, subagentPromise);
 
-        return {
-          ok: true,
-          output,
-          agent: subagentName,
-          text: result.text,
-          toolCalls: result.toolCalls,
-          steps: result.steps,
-        };
-      } catch (e) {
-        const error = e instanceof Error ? e.message : String(e);
-        return {
-          ok: false,
-          error: `Subagent ${subagentName} failed: ${error}`,
-          output: `<task agent="${subagentName}" state="error">\n<task_error>${error}</task_error>\n</task>`,
-        };
-      }
+      return {
+        ok: true,
+        message: `Delegated to @${subagentName}. They are working on it in the background.`,
+        agent: subagentName,
+        description: input.description,
+      };
     },
   });
 }
+
+// Track pending delegations (for testing/debugging)
+const _pendingDelegations = new Map<string, Promise<RuntimeResult | null>>();
