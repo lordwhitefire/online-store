@@ -1,42 +1,98 @@
 /**
- * WebForge Agent Runtime — the core LLM loop.
+ * WebForge Agent Runtime — MANUAL LOOP
  *
- * This is the engine that EVERY agent uses. The only differences between
- * agents are:
- *   - systemPrompt → loaded from their skill .md file
- *   - tools → different sets per department/role
- *   - permissions → different rules per agent
- *   - model → DeepSeek vs GLM
+ * We control the loop. Not the SDK. Not a black box.
  *
- * The loop (same as OpenCode):
- *   1. Load system prompt (skill file)
- *   2. Load conversation history
- *   3. Call LLM with: system + history + available tools
- *   4. LLM responds: speaks naturally OR calls a tool
- *   5. If tool called: check permissions → execute → feed result back → loop
- *   6. If done: return result
+ * while (true):
+ *   1. Call LLM with messages + tools
+ *   2. If LLM returns text only → done, return text
+ *   3. If LLM calls a tool:
+ *      a. Check permissions
+ *      b. Execute tool (task.delegate = SYNCHRONOUS subagent)
+ *      c. Add tool result to messages
+ *      d. Continue loop
  *
- * Uses Vercel AI SDK's streamText with maxSteps for the loop.
+ * Synchronous delegation: when Hermes calls task.delegate to Hephaestus,
+ * Hermes's loop PAUSES, Hephaestus's loop RUNS, result BUBBLES BACK UP.
  */
 
-import { generateText, tool, jsonSchema, type Tool, type CoreMessage, isStepCount } from "ai";
-import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import { readFileSync } from "fs";
-import { join } from "path";
+import { PrismaClient } from "@prisma/client";
+import { readFileSync, writeFileSync, mkdirSync } from "fs";
+import { join, dirname } from "path";
 import { homedir } from "os";
-import { getAgentTools } from "./tool-registry";
-import { checkPermission, type AgentConfig } from "./permissions";
-import { loadAgentConfig } from "./agent-config";
+import { execSync } from "child_process";
+
+// Prisma singleton (prevents Next.js hot-reload issues)
+const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
+const prisma = globalForPrisma.prisma || new PrismaClient();
+if (!globalForPrisma.prisma) {
+  globalForPrisma.prisma = prisma;
+}
 
 const WEBFORGE_HOME = join(homedir(), "webforge");
 const SKILLS_DIR = join(WEBFORGE_HOME, "skills");
+const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
+const MODEL = "deepseek/deepseek-v4-flash";
 
-// ── Model providers ──
+// ── Types ──
+
+interface AgentConfig {
+  name: string;
+  department: string;
+  roleTier: string;
+  title: string;
+  model: string;
+  skillFile: string;
+  tools: string[];
+  reportsTo: string | null;
+  subordinates: string[];
+}
+
+interface ToolDef {
+  name: string;
+  description: string;
+  parameters: object;
+  execute: (input: any) => Promise<any>;
+}
+
+interface LLMMessage {
+  role: "system" | "user" | "assistant" | "tool";
+  content?: string | null;
+  tool_calls?: Array<{
+    id: string;
+    type: "function";
+    function: { name: string; arguments: string };
+  }>;
+  tool_call_id?: string;
+}
+
+export interface RuntimeResult {
+  text: string;
+  toolCalls: Array<{ name: string; input: any; result: any }>;
+  model: string;
+  steps: number;
+}
+
+// ── Agent state tracking ──
+
+async function setAgentState(agent: string, state: string, task?: string) {
+  console.log(`[State] ${agent} → ${state}${task ? ` (task: ${task})` : ""}`);
+  await prisma.agentState.upsert({
+    where: { agent },
+    update: { state, task: task || null, lastActive: new Date() },
+    create: { agent, state, task: task || null },
+  });
+}
+
+async function getAgentState(agent: string): Promise<string> {
+  const record = await prisma.agentState.findUnique({ where: { agent } });
+  return record?.state || "idle";
+}
+
+// ── API key ──
 
 function getApiKey(): string {
-  // Check env var
   if (process.env.DEEPSEEK_API_KEY) return process.env.DEEPSEEK_API_KEY;
-  // Check .env file
   try {
     const envPath = join(process.cwd(), ".env");
     const content = readFileSync(envPath, "utf-8");
@@ -49,289 +105,539 @@ function getApiKey(): string {
   return "";
 }
 
-function getProvider(model: string) {
-  const apiKey = getApiKey();
-  if (!apiKey) {
-    throw new Error("DEEPSEEK_API_KEY not set. Add it to .env or environment.");
+// ── Load agent config from agents.json ──
+
+let _agents: Record<string, AgentConfig> | null = null;
+
+function loadAgentConfig(agentName: string): AgentConfig {
+  if (!_agents) {
+    const path = join(__dirname, "agents.json");
+    let data: string;
+    try {
+      data = readFileSync(path, "utf-8");
+    } catch {
+      data = readFileSync(join(process.cwd(), "src/lib/agent-runtime/agents.json"), "utf-8");
+    }
+    const parsed = JSON.parse(data);
+    _agents = {};
+    for (const a of parsed.agents) {
+      _agents[a.name.toLowerCase()] = {
+        name: a.name,
+        department: a.department,
+        roleTier: a.roleTier,
+        title: a.title,
+        model: "deepseek",
+        skillFile: a.skillFile,
+        tools: getToolListForAgent(a.department, a.roleTier),
+        reportsTo: a.reportsTo,
+        subordinates: a.subordinates || [],
+      };
+    }
   }
-  const openrouter = createOpenRouter({ apiKey });
-  // For now, all models go through OpenRouter
-  // DeepSeek v4 Flash for code tasks, GLM could be added later
-  return openrouter("deepseek/deepseek-v4-flash");
+
+  const config = _agents[agentName.toLowerCase()];
+  if (!config) throw new Error(`Agent not found: ${agentName}`);
+  return config;
 }
 
-// ── The runtime loop ──
-
-export interface RuntimeResult {
-  text: string;
-  toolCalls: Array<{ name: string; input: unknown; result: unknown }>;
-  model: string;
-  steps: number;
+function getToolListForAgent(department: string, roleTier: string): string[] {
+  const tools: string[] = [];
+  if (roleTier === "director" || roleTier === "lead") {
+    tools.push("task.create", "task.list", "task.show", "task.delegate", "mailbox.send", "mailbox.read");
+  }
+  if (roleTier === "worker") {
+    if (department === "build") {
+      tools.push("file.read", "file.write", "git.commit", "task.show", "task.pick", "task.done", "mailbox.send", "mailbox.read");
+    } else {
+      tools.push("file.read", "task.show", "mailbox.send", "mailbox.read");
+    }
+  }
+  return Array.from(new Set(tools));
 }
 
-export interface RuntimeOptions {
-  agentName: string;
-  message: string;
-  history?: CoreMessage[];
-  maxSteps?: number;
-  taskId?: string;
-  runId?: string;
+// ── Tool definitions ──
+
+function buildToolDefs(config: AgentConfig): Record<string, ToolDef> {
+  const defs: Record<string, ToolDef> = {};
+
+  if (config.tools.includes("task.create")) {
+    defs["task.create"] = {
+      name: "task.create",
+      description: "Create a new task on the Kanban board",
+      parameters: {
+        type: "object",
+        properties: {
+          title: { type: "string", description: "What to build or fix" },
+          type: { type: "string", enum: ["feature", "bugfix", "refactor", "test", "docs"] },
+          area: { type: "string" },
+          effort: { type: "string", enum: ["S", "M", "L"] },
+        },
+        required: ["title", "type"],
+      },
+      execute: async (input: any) => {
+        const id = await nextId("task");
+        const task = await prisma.task.create({
+          data: { id, title: input.title, type: input.type, area: input.area || "", effort: input.effort || "M", status: "backlog" },
+        });
+        return { ok: true, task };
+      },
+    };
+  }
+
+  if (config.tools.includes("task.list")) {
+    defs["task.list"] = {
+      name: "task.list",
+      description: "List tasks on the board",
+      parameters: { type: "object", properties: { status: { type: "string", enum: ["all","backlog","todo","doing","done","blocked"] } } },
+      execute: async (input: any) => {
+        const tasks = input.status && input.status !== "all"
+          ? await prisma.task.findMany({ where: { status: input.status }, orderBy: { createdAt: "asc" } })
+          : await prisma.task.findMany({ orderBy: { createdAt: "asc" } });
+        return { ok: true, tasks, count: tasks.length };
+      },
+    };
+  }
+
+  if (config.tools.includes("task.show")) {
+    defs["task.show"] = {
+      name: "task.show",
+      description: "Show task details",
+      parameters: { type: "object", properties: { taskId: { type: "string" } }, required: ["taskId"] },
+      execute: async (input: any) => {
+        const task = await prisma.task.findUnique({ where: { id: input.taskId } });
+        return task ? { ok: true, task } : { ok: false, error: "Not found" };
+      },
+    };
+  }
+
+  if (config.tools.includes("task.pick")) {
+    defs["task.pick"] = {
+      name: "task.pick",
+      description: "Pick up a task — assign ownership and move to DOING",
+      parameters: { type: "object", properties: { taskId: { type: "string" }, agent: { type: "string" } }, required: ["taskId"] },
+      execute: async (input: any) => {
+        const agent = input.agent || config.name;
+        const task = await prisma.task.update({ where: { id: input.taskId }, data: { owner: agent, status: "doing", startedAt: new Date() } });
+        return { ok: true, task };
+      },
+    };
+  }
+
+  if (config.tools.includes("task.done")) {
+    defs["task.done"] = {
+      name: "task.done",
+      description: "Mark a task as done",
+      parameters: { type: "object", properties: { taskId: { type: "string" }, summary: { type: "string" } }, required: ["taskId"] },
+      execute: async (input: any) => {
+        const task = await prisma.task.update({ where: { id: input.taskId }, data: { status: "done", completedAt: new Date() } });
+        return { ok: true, task };
+      },
+    };
+  }
+
+  if (config.tools.includes("mailbox.send")) {
+    defs["mailbox.send"] = {
+      name: "mailbox.send",
+      description: "Send a message to another agent (must be direct superior or subordinate)",
+      parameters: {
+        type: "object",
+        properties: {
+          to: { type: "string" },
+          msgType: { type: "string", enum: ["TASK_ASSIGNED","TASK_ACK","TASK_PROGRESS","TASK_DONE","TASK_BLOCKED","QUESTION","ANSWER","INFO"] },
+          subject: { type: "string" },
+          body: { type: "string" },
+          taskId: { type: "string" },
+        },
+        required: ["to", "msgType", "subject", "body"],
+      },
+      execute: async (input: any) => {
+        const id = await nextId("msg");
+        await prisma.message.create({
+          data: { id, fromAgent: config.name, toAgent: input.to, type: input.msgType, subject: input.subject, body: input.body, taskId: input.taskId || null, status: "unread" },
+        });
+        return { ok: true, messageId: id };
+      },
+    };
+  }
+
+  if (config.tools.includes("mailbox.read")) {
+    defs["mailbox.read"] = {
+      name: "mailbox.read",
+      description: "Read your inbox",
+      parameters: { type: "object", properties: {} },
+      execute: async () => {
+        const messages = await prisma.message.findMany({ where: { toAgent: config.name, status: "unread" }, orderBy: { createdAt: "asc" } });
+        return { ok: true, messages, count: messages.length };
+      },
+    };
+  }
+
+  if (config.tools.includes("file.read")) {
+    defs["file.read"] = {
+      name: "file.read",
+      description: "Read a file from the project",
+      parameters: { type: "object", properties: { path: { type: "string" } }, required: ["path"] },
+      execute: async (input: any) => {
+        if (input.path.endsWith(".env")) return { ok: false, error: "Permission denied: .env" };
+        try { return { ok: true, content: readFileSync(join(process.cwd(), input.path), "utf-8").slice(0, 10000) }; }
+        catch (e: any) { return { ok: false, error: e.message }; }
+      },
+    };
+  }
+
+  if (config.tools.includes("file.write")) {
+    
+    
+    defs["file.write"] = {
+      name: "file.write",
+      description: "Write content to a file",
+      parameters: { type: "object", properties: { path: { type: "string" }, content: { type: "string" } }, required: ["path", "content"] },
+      execute: async (input: any) => {
+        if (input.path.endsWith(".env")) return { ok: false, error: "Permission denied: .env" };
+        try {
+          const fullPath = join(process.cwd(), input.path);
+          mkdirSync(dirname(fullPath), { recursive: true });
+          writeFileSync(fullPath, input.content, "utf-8");
+          return { ok: true, path: input.path, bytes: input.content.length };
+        } catch (e: any) { return { ok: false, error: e.message }; }
+      },
+    };
+  }
+
+  if (config.tools.includes("git.commit")) {
+    
+    defs["git.commit"] = {
+      name: "git.commit",
+      description: "Commit changes to git",
+      parameters: { type: "object", properties: { message: { type: "string" } }, required: ["message"] },
+      execute: async (input: any) => {
+        try {
+          execSync(`git add -A && git commit -m "${input.message.replace(/"/g, '\\"')}"`, { encoding: "utf-8", timeout: 10000, cwd: process.cwd() });
+          return { ok: true, message: input.message };
+        } catch (e: any) { return { ok: false, error: e.message }; }
+      },
+    };
+  }
+
+  // task.delegate — SYNCHRONOUS (runs subagent loop, waits for result)
+  if (config.roleTier === "director" || config.roleTier === "lead") {
+    defs["task.delegate"] = {
+      name: "task.delegate",
+      description:
+        "Delegate a task to a subordinate agent. Their loop runs SYNCHRONOUSLY — " +
+        "your loop pauses, they do the work, their result comes back to you. " +
+        "The subordinate must be one of your direct subordinates.",
+      parameters: {
+        type: "object",
+        properties: {
+          subagent: { type: "string", description: "Subordinate agent name (must be your direct subordinate)" },
+          description: { type: "string", description: "Short (3-5 words) task description" },
+          prompt: { type: "string", description: "The task prompt for the subordinate" },
+          taskId: { type: "string", description: "Task ID being delegated (optional)" },
+        },
+        required: ["subagent", "description", "prompt"],
+      },
+      execute: async (input: any) => {
+        const subagentName = input.subagent;
+
+        // Chain-of-command check
+        if (!config.subordinates.includes(subagentName)) {
+          return {
+            ok: false,
+            error: `CHAIN VIOLATION: ${config.name} cannot delegate to ${subagentName}. ` +
+                   `Direct subordinates: ${config.subordinates.join(", ")}`,
+          };
+        }
+
+        console.log(`[Delegate] ${config.name} → ${subagentName}: ${input.description}`);
+        console.log(`[Delegate]   Prompt: ${input.prompt.slice(0, 120)}...`);
+
+        // PARENT LOOP PAUSES HERE — subagent runs SYNCHRONOUSLY
+        setAgentState(config.name, "waiting", input.taskId);
+
+        try {
+          const subResult = await agentLoop(subagentName, input.prompt);
+
+          // PARENT RESUMES — subagent's result is the tool result
+          setAgentState(config.name, "active", input.taskId);
+
+          console.log(`[Delegate] ${subagentName} → ${config.name}: result received (${subResult.text.slice(0, 100)}...)`);
+
+          return {
+            ok: true,
+            agent: subagentName,
+            text: subResult.text,
+            toolCalls: subResult.toolCalls.length,
+            output: `<task agent="${subagentName}" state="completed">\n${subResult.text}\n</task>`,
+          };
+        } catch (e: any) {
+          setAgentState(config.name, "active", input.taskId);
+          console.error(`[Delegate] ${subagentName} FAILED: ${e.message}`);
+          return {
+            ok: false,
+            error: `${subagentName} failed: ${e.message}`,
+            output: `<task agent="${subagentName}" state="error">\n${e.message}\n</task>`,
+          };
+        }
+      },
+    };
+  }
+
+  return defs;
 }
 
-/**
- * Run an agent's runtime loop.
- *
- * This is THE function that powers every agent in WebForge.
- * Hermes, Hephaestus, Jr-Hawk — they all call this.
- */
-export async function runAgent(options: RuntimeOptions): Promise<RuntimeResult> {
-  const { agentName, message, history = [], maxSteps = 10, taskId, runId } = options;
+// ── ID generation ──
 
-  // 1. Load agent configuration (skill file, tools, permissions, model)
-  const config = await loadAgentConfig(agentName);
-  console.log(`[Runtime] ${agentName} loaded: model=${config.model}, tools=${config.tools.length}`);
+async function nextId(prefix: string): Promise<string> {
+  const name = prefix.replace("-", "");
+  const counter = await prisma.sequenceCounter.upsert({
+    where: { name },
+    update: { nextValue: { increment: 1 } },
+    create: { name, nextValue: 2 },
+  });
+  return `${prefix}-${String(counter.nextValue - 1).padStart(3, "0")}`;
+}
 
-  // 2. Load system prompt from skill file
-  const systemPrompt = loadSkillFile(config.skillFile);
-  const toolHint = buildToolHint(config);
-  const fullSystemPrompt = systemPrompt + "\n\n" + toolHint;
-  console.log(`[Runtime] ${agentName} system prompt: ${fullSystemPrompt.length} chars`);
+// ── The LLM call (raw OpenRouter API) ──
 
-  // 3. Build tools (filtered by agent's tool list + permissions)
-  const tools = await buildTools(config, taskId, runId);
-  console.log(`[Runtime] ${agentName} tools: ${Object.keys(tools).join(", ")}`);
+async function callLLM(
+  systemPrompt: string,
+  messages: LLMMessage[],
+  toolDefs: Record<string, ToolDef>,
+): Promise<{ content: string | null; toolCalls: any[] | null }> {
+  const apiKey = getApiKey();
+  if (!apiKey) throw new Error("DEEPSEEK_API_KEY not set");
 
-  // 4. Build messages
-  const messages: CoreMessage[] = [
-    ...history,
-    { role: "user" as const, content: message },
-  ];
+  // Build OpenAI-format tool definitions
+  const tools = Object.values(toolDefs).map((t) => ({
+    type: "function" as const,
+    function: {
+      name: t.name,
+      description: t.description,
+      parameters: t.parameters,
+    },
+  }));
 
-  // 5. Call LLM with the loop (using generateText for synchronous multi-step)
-  const provider = getProvider(config.model);
-  const toolCalls: Array<{ name: string; input: unknown; result: unknown }> = [];
-
-  const result = await generateText({
-    model: provider,
-    system: fullSystemPrompt,
-    messages,
-    tools,
-    stopWhen: isStepCount(maxSteps),
+  const body = {
+    model: MODEL,
+    messages: [
+      { role: "system" as const, content: systemPrompt },
+      ...messages,
+    ],
+    tools: tools.length > 0 ? tools : undefined,
+    max_tokens: 4096,
     temperature: 0.7,
-    maxOutputTokens: 4096,
-    prepareStep: async ({ steps }) => {
-      const completedSteps = steps.length;
-      console.log(`[Runtime] ${agentName} prepareStep: ${completedSteps} completed`);
-      if (completedSteps < 3) {
-        return { toolChoice: "required" as const };
-      }
-      return { toolChoice: "auto" as const };
+  };
+
+  const response = await fetch(OPENROUTER_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${apiKey}`,
+      "HTTP-Referer": "https://webforge.local",
+      "X-Title": "WebForge",
     },
-    onStepFinish: (event) => {
-      console.log(`[Runtime] ${agentName} step finished: ${event.toolCalls?.length || 0} tool calls, text=${event.text?.slice(0, 50) || "(none)"}`);
-      if (event.toolCalls) {
-        for (const tc of event.toolCalls) {
-          toolCalls.push({ name: tc.toolName, input: tc.input, result: null });
-        }
-      }
-      if (event.toolResults) {
-        for (let i = 0; i < event.toolResults.length; i++) {
-          const tr = event.toolResults[i];
-          const idx = toolCalls.length - event.toolResults.length + i;
-          if (idx >= 0 && idx < toolCalls.length) {
-            toolCalls[idx].result = tr.output;
-          }
-        }
-      }
-    },
+    body: JSON.stringify(body),
   });
 
-  // 6. Get final text
-  const text = result.text;
-  const stepCount = result.steps?.length || toolCalls.length;
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`LLM API error ${response.status}: ${errorText.slice(0, 200)}`);
+  }
 
-  console.log(`[Runtime] ${agentName} completed: ${stepCount} steps, ${toolCalls.length} tool calls`);
+  const data = await response.json();
+  const message = data.choices?.[0]?.message;
 
   return {
-    text,
-    toolCalls,
-    model: config.model,
-    steps: stepCount,
+    content: message?.content || null,
+    toolCalls: message?.tool_calls || null,
   };
 }
 
-// ── Skill file loader ──
+// ── THE MAIN LOOP ──
 
-function loadSkillFile(skillFile: string): string {
-  if (!skillFile) {
-    return "You are a WebForge agent. Follow the laws and do your job.";
+async function agentLoop(
+  agentName: string,
+  message: string,
+  maxIterations = 10,
+): Promise<RuntimeResult> {
+  // 1. Load config
+  const config = loadAgentConfig(agentName);
+  console.log(`[Loop] ${agentName} starting (role: ${config.roleTier}, dept: ${config.department})`);
+
+  // 2. Build system prompt
+  const systemPrompt = buildSystemPrompt(config);
+  console.log(`[Loop] ${agentName} system prompt: ${systemPrompt.length} chars`);
+
+  // 3. Build tools
+  const toolDefs = buildToolDefs(config);
+  console.log(`[Loop] ${agentName} tools: ${Object.keys(toolDefs).join(", ")}`);
+
+  // 4. Set state to active
+  await setAgentState(agentName, "active");
+
+  // 5. Initialize messages
+  let messages: LLMMessage[] = [
+    { role: "user", content: message },
+  ];
+
+  const allToolCalls: Array<{ name: string; input: any; result: any }> = [];
+  let steps = 0;
+
+  // 6. THE LOOP
+  while (steps < maxIterations) {
+    steps++;
+    console.log(`[Loop] ${agentName} iteration ${steps}`);
+
+    // Call LLM
+    const response = await callLLM(systemPrompt, messages, toolDefs);
+
+    // Case A: LLM returned text only (no tool calls) → DONE
+    if (!response.toolCalls || response.toolCalls.length === 0) {
+      console.log(`[Loop] ${agentName} done — text response (no more tool calls)`);
+      await setAgentState(agentName, "sleeping");
+      return {
+        text: response.content || "(no response)",
+        toolCalls: allToolCalls,
+        model: MODEL,
+        steps,
+      };
+    }
+
+    // Case B: LLM called tools → execute them, feed results back, CONTINUE LOOP
+    // Add the assistant message (with tool calls) to message history
+    messages.push({
+      role: "assistant",
+      content: response.content,
+      tool_calls: response.toolCalls,
+    });
+
+    // Execute each tool call
+    for (const tc of response.toolCalls) {
+      const toolName = tc.function.name;
+      let toolInput: any;
+      try {
+        toolInput = JSON.parse(tc.function.arguments);
+      } catch {
+        toolInput = {};
+      }
+
+      console.log(`[Loop] ${agentName} → tool: ${toolName}(${JSON.stringify(toolInput).slice(0, 150)})`);
+
+      // Find the tool
+      const toolDef = toolDefs[toolName];
+      let result: any;
+
+      if (!toolDef) {
+        result = { ok: false, error: `Unknown tool: ${toolName}` };
+      } else {
+        // Execute the tool
+        // For task.delegate, this SYNCHRONOUSLY runs the subagent loop
+        try {
+          result = await toolDef.execute(toolInput);
+        } catch (e: any) {
+          result = { ok: false, error: e.message };
+        }
+      }
+
+      console.log(`[Loop] ${agentName} ← ${toolName}: ${JSON.stringify(result).slice(0, 200)}`);
+
+      allToolCalls.push({ name: toolName, input: toolInput, result });
+
+      // Add tool result to message history
+      messages.push({
+        role: "tool",
+        tool_call_id: tc.id,
+        content: JSON.stringify(result),
+      });
+    }
+
+    // LOOP CONTINUES — go back to callLLM with updated messages
   }
-  const path = join(SKILLS_DIR, skillFile);
-  try {
-    return readFileSync(path, "utf-8");
-  } catch {
-    return `You are a WebForge agent. Your skill file (${skillFile}) was not found.`;
-  }
+
+  // Max iterations reached
+  console.log(`[Loop] ${agentName} hit max iterations (${maxIterations})`);
+  await setAgentState(agentName, "sleeping");
+  return {
+    text: `(reached max iterations: ${maxIterations})`,
+    toolCalls: allToolCalls,
+    model: MODEL,
+    steps,
+  };
 }
 
-// ── Tool hint builder ──
-//
-// Tells the LLM what tools it has and how to use them.
-// This is added to the system prompt so the LLM knows its capabilities.
+// ── System prompt builder ──
 
-function buildToolHint(config: AgentConfig): string {
-  const lines: string[] = [];
-  lines.push("## Available Tools");
-  lines.push("You have the following tools available. Call them when needed:");
-  lines.push("");
+function buildSystemPrompt(config: AgentConfig): string {
+  let prompt = "";
 
+  // Load skill file
+  if (config.skillFile) {
+    const path = join(SKILLS_DIR, config.skillFile);
+    try {
+      prompt += readFileSync(path, "utf-8");
+    } catch {
+      prompt += `You are ${config.name}, a ${config.title} in the ${config.department} department.`;
+    }
+  }
+
+  // Add tool hints
+  prompt += "\n\n## Available Tools\n";
+  prompt += "You have these tools. Call them when needed:\n";
   for (const toolName of config.tools) {
-    const desc = TOOL_DESCRIPTIONS[toolName] || toolName;
-    lines.push(`- **${toolName}**: ${desc}`);
+    prompt += `- **${toolName}**: ${TOOL_DESCRIPTIONS[toolName] || toolName}\n`;
   }
 
+  // Delegation hint for managers
   if (config.roleTier === "director" || config.roleTier === "lead") {
-    lines.push("");
-    lines.push("## Delegation");
-    lines.push("You have a `task.delegate` tool. Use it to assign work to your subordinates.");
-    lines.push(`Your direct subordinates: ${config.subordinates.join(", ")}`);
-    lines.push("When you create a task, also delegate it to the right subordinate using task.delegate.");
-    lines.push("The subordinate will run their own agent runtime and return a result.");
+    prompt += `\n## Delegation\n`;
+    prompt += `You have **task.delegate** — use it to assign work to subordinates.\n`;
+    prompt += `Your direct subordinates: ${config.subordinates.join(", ")}\n`;
+    prompt += `When you delegate, the subordinate runs SYNCHRONOUSLY — their result comes back to you.\n`;
+    prompt += `You can delegate to multiple subordinates by calling task.delegate multiple times.\n`;
   }
 
-  lines.push("");
-  lines.push("## Important — Tool Loop");
-  lines.push("- When you call a tool, the result is fed back to you automatically.");
-  lines.push("- You can call multiple tools in sequence — DON'T stop after one tool call.");
-  lines.push("- After each tool result, ask yourself: 'Is there more I need to do?'");
-  lines.push("- If yes, call the next tool. If no, give your final response.");
-  lines.push("- Example: create a task → then delegate it → then respond to the user.");
+  // Loop hint
+  prompt += `\n## Important\n`;
+  prompt += `- After each tool call, the result is fed back to you.\n`;
+  prompt += `- You can call multiple tools in sequence — DON'T stop after one.\n`;
+  prompt += `- When all work is done, respond with text (no tool call) to finish.\n`;
 
-  return lines.join("\n");
+  return prompt;
 }
 
 const TOOL_DESCRIPTIONS: Record<string, string> = {
   "task.create": "Create a new task on the Kanban board",
-  "task.list": "List tasks on the board (optionally filtered by status)",
+  "task.list": "List tasks on the board",
   "task.show": "Show details of a specific task",
-  "task.delegate": "Delegate a task to a subordinate agent — they will run their own runtime and return a result",
-  "mailbox.send": "Send a message to another agent (must be your direct superior or subordinate)",
-  "mailbox.read": "Read your inbox — list unread messages addressed to you",
+  "task.pick": "Pick up a task — assign ownership and move to DOING",
+  "task.done": "Mark a task as done",
+  "task.delegate": "Delegate to a subordinate — they run their loop, result comes back to you",
+  "mailbox.send": "Send a message to another agent",
+  "mailbox.read": "Read your inbox",
   "file.read": "Read a file from the project",
-  "file.write": "Write content to a file in the project",
+  "file.write": "Write content to a file",
   "git.commit": "Commit changes to git",
 };
 
-// ── Tool builder ──
+// ── Public API ──
 
-async function buildTools(
-  config: AgentConfig,
-  taskId?: string,
-  runId?: string,
-): Promise<Record<string, Tool>> {
-  const allTools = getAgentTools(config, taskId, runId);
-  const filtered: Record<string, Tool> = {};
-
-  for (const [name, tool] of Object.entries(allTools)) {
-    // Check permission: is this tool allowed for this agent?
-    const allowed = checkPermission(config, name);
-    if (allowed) {
-      filtered[name] = tool;
-    } else {
-      console.log(`[Runtime] Permission denied: ${config.name} cannot use ${name}`);
-    }
-  }
-
-  // Add task.delegate tool for directors and leads (built here to access runAgent)
-  if (config.roleTier === "director" || config.roleTier === "lead") {
-    filtered["task.delegate"] = createDelegateTool(config);
-  }
-
-  return filtered;
+export async function runAgent(options: {
+  agentName: string;
+  message: string;
+  maxSteps?: number;
+  taskId?: string;
+}): Promise<RuntimeResult> {
+  return agentLoop(options.agentName, options.message, options.maxSteps || 10);
 }
 
-// ── task.delegate tool ──
-//
-// Follows OpenCode's task tool pattern (packages/opencode/src/tool/task.ts):
-//   1. Takes description, prompt, subagent_type
-//   2. Looks up the subagent config
-//   3. Checks that subagent_type is a direct subordinate (chain of command)
-//   4. Runs the subagent's runtime (recursive runAgent call)
-//   5. Returns the result wrapped in <task> tags
-//
-// The subagent inherits a restricted permission set:
-//   - Parent's deny rules still apply
-//   - Subagent cannot spawn its own subagents unless it's a director/lead
+// ── Get all agent states (for UI) ──
 
-function createDelegateTool(parentConfig: AgentConfig): Tool {
-  return tool({
-    description:
-      "Delegate a task to a subordinate agent. The subordinate runs in the background " +
-      "and you will be notified when done. Use this to assign work down the chain of command. " +
-      "The subordinate must be one of your direct subordinates.",
-    inputSchema: jsonSchema({
-      type: "object",
-      properties: {
-        subagent: {
-          type: "string",
-          description: "The name of the subordinate agent to delegate to",
-        },
-        description: {
-          type: "string",
-          description: "A short (3-5 words) description of the task",
-        },
-        prompt: {
-          type: "string",
-          description: "The task prompt for the subordinate agent",
-        },
-        taskId: {
-          type: "string",
-          description: "The task ID being delegated (optional)",
-        },
-      },
-      required: ["subagent", "description", "prompt"],
-    }),
-    execute: async (input: { subagent: string; description: string; prompt: string; taskId?: string }) => {
-      const subagentName = input.subagent;
-
-      // Chain-of-command check
-      if (!parentConfig.subordinates.includes(subagentName)) {
-        return {
-          ok: false,
-          error: `CHAIN VIOLATION: ${parentConfig.name} cannot delegate to ${subagentName}. ` +
-                 `Direct subordinates: ${parentConfig.subordinates.join(", ")}`,
-        };
-      }
-
-      console.log(`[Runtime] ${parentConfig.name} → ${subagentName}: ${input.description}`);
-
-      // Run subordinate ASYNCHRONOUSLY (fire and forget)
-      // The parent agent gets an immediate response and can continue
-      const subagentPromise = runAgent({
-        agentName: subagentName,
-        message: input.prompt,
-        maxSteps: 3, // subagents get fewer steps
-        taskId: input.taskId,
-      }).then(result => {
-        console.log(`[Runtime] ${subagentName} completed: ${result.toolCalls.length} tool calls`);
-        return result;
-      }).catch(e => {
-        console.error(`[Runtime] ${subagentName} failed:`, e);
-        return null;
-      });
-
-      // Store the promise so we can await it later if needed
-      _pendingDelegations.set(`${parentConfig.name}-${subagentName}-${Date.now()}`, subagentPromise);
-
-      return {
-        ok: true,
-        message: `Delegated to @${subagentName}. They are working on it in the background.`,
-        agent: subagentName,
-        description: input.description,
-      };
-    },
-  });
+export async function getAgentStates(): Promise<Record<string, { state: string; task: string | null }>> {
+  const states = await prisma.agentState.findMany();
+  const result: Record<string, { state: string; task: string | null }> = {};
+  for (const s of states) {
+    result[s.agent] = { state: s.state, task: s.task };
+  }
+  return result;
 }
-
-// Track pending delegations (for testing/debugging)
-const _pendingDelegations = new Map<string, Promise<RuntimeResult | null>>();
