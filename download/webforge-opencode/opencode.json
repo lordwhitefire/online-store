@@ -1,0 +1,7 @@
+{
+  "default_agent": "hermes",
+  "agents": {
+    "build": { "disabled": true },
+    "plan": { "disabled": true }
+  }
+}
