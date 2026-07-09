@@ -135,7 +135,7 @@
 
 ## Error #7 — THE BIG ONE: Mailbox Doesn't Wake Agents (Async Communication Gap)
 
-**Status:** `[PENDING — NEEDS CEO CONFIRMATION ON APPROACH]`
+**Status:** `[APPLIED]` (2026-07-08 — CEO confirmed Option A: Pocket Universe)
 
 **Symptom:** When agent A sends a message to agent B's mailbox, B doesn't wake up. B has to already be running to check their inbox. But if B isn't running, the message sits there forever. And Hermes can't manually wake every agent — that wastes his 35 tool calls.
 
@@ -183,7 +183,7 @@ This OpenCode plugin extends the native subagent paradigm with three tools:
 
 ## Error #8 — "What to Check When You Wake Up" Is Not Defined
 
-**Status:** `[PENDING — NEEDS CEO CONFIRMATION ON PROTOCOL]`
+**Status:** `[APPLIED]` (2026-07-08 — CEO confirmed the 6-step wake-up protocol)
 
 **Symptom:** When an agent wakes up (gets spawned), what should it check first? The v2 design doesn't specify this. An agent that doesn't know what to check will either:
 - Check everything (wastes all 35 calls reading logs)
@@ -253,7 +253,7 @@ STEP 6: Start working
 
 ## Error #9 — Agent MD Format Is Too Simple
 
-**Status:** `[PENDING — NEEDS CEO CONFIRMATION ON NEW FORMAT]`
+**Status:** `[APPLIED]` (2026-07-08 — CEO confirmed the comprehensive format upgrade)
 
 **Symptom:** Our agent files (hermes.md, voss.md, daedalus.md) use a simple "Who I Am / What I Do / What I Don't Do" structure (~60-140 lines). The awesome-opencode-subagents and jbeck018/agents-opencode repos use a much more comprehensive format (130-320 lines) that specifies invocation triggers, workflow position, communication protocols, routing examples, and disambiguation.
 
@@ -380,15 +380,16 @@ You are a senior <role> specializing in <expertise>.
 | 4 | `safe_task` fragile subprocess | Use native `task` with glob permissions | `[APPLIED]` |
 | 5 | "Mailbox Voss" doesn't wake | Use `task` to spawn, not mailbox | `[APPLIED]` |
 | 6 | Stale `safe_task` references | Updated all agent files | `[APPLIED]` |
-| 7 | Mailbox doesn't wake agents | **Install Pocket Universe plugin OR build DIY wake-and-message** | `[PENDING]` |
-| 8 | No wake-up protocol defined | **6-step tiered recall protocol** | `[PENDING]` |
-| 9 | Agent format too simple | **Adopt awesome-opencode comprehensive format** | `[PENDING]` |
+| 7 | Mailbox doesn't wake agents | **Install Pocket Universe plugin** (broadcast auto-wakes, recall gives memory) | `[APPLIED]` |
+| 8 | No wake-up protocol defined | **6-step tiered recall protocol** (always check superior, peers only if needed) | `[APPLIED]` |
+| 9 | Agent format too simple | **Adopted awesome-opencode comprehensive format** (When Invoked, Workflow Position, Capabilities, etc.) | `[APPLIED]` |
 
 **Next session priorities:**
-1. Get CEO decisions on #7, #8, #9
-2. Apply confirmed fixes
-3. Rebuild the v2 package with all fixes
-4. Re-test integration
+1. ~~Get CEO decisions on #7, #8, #9~~ ✅ Done (2026-07-08)
+2. ~~Apply confirmed fixes~~ ✅ Done (2026-07-08)
+3. Test the rebuilt package with the new agent format + Pocket Universe
+4. Monitor for the OpenCode PRs (#9272 + #7725) that unblock `broadcast` auto-wake
+5. Add new errors to this file as they're discovered
 
 ---
 

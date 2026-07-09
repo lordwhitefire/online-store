@@ -1,0 +1,728 @@
+     1→# WebForge Implementation Plan
+     2→## The Complete System — Built on OpenCode
+     3→
+     4→---
+     5→
+     6→## What We're Building
+     7→
+     8→An autonomous agent system that lives inside OpenCode. You give it a goal, it recruits agents, divides work, builds everything, and reports back — without you being present for every step.
+     9→
+    10→### The 7 Pillars
+    11→
+    12→| Pillar | What It Is | Battle-Tested Source |
+    13→|---|---|---|
+    14→| **Agents** | Markdown files (system prompt + permissions + steps:35) | ankitmundada + jbeck018 repos |
+    15→| **Recruiting** | HR creates agent files on demand from repo templates | AgentSpawn pattern |
+    16→| **Loop** | Ralph Loop — wrapper re-launches Hermes until plan is done | oh-my-openagent / open-ralph-wiggum |
+    17→| **Worktree** | Each agent works in isolated git worktree | opencode-worktree plugin |
+    18→| **Skills** | Loaded on-demand by agents at runtime | Vercel/Gentleman/FrancoStino repos |
+    19→| **MCPs** | External connections (GitHub, Context7, etc.) — one setup, all agents use | OpenCode MCP system |
+    20→| **Context Tools** | Repomix (project packing), Context7 (live docs), ast-grep (smart code search) | Repomix + Context7 + ast-grep |
+    21→
+    22→---
+    23→
+    24→## Phase 1: Permanent Agents (2 files)
+    25→
+    26→These are the ONLY agents that exist before a project starts.
+    27→
+    28→### Agent 1: Hermes (the coordinator)
+    29→
+    30→File: `~/.config/opencode/agents/hermes.md`
+    31→
+    32→```markdown
+    33→---
+    34→description: "WebForge COO — receives tasks from CEO, delegates to recruited agents"
+    35→mode: primary
+    36→steps: 35
+    37→permission:
+    38→  read: allow
+    39→  edit: allow
+    40→  bash: allow
+    41→  task: allow
+    42→  websearch: allow
+    43→  webfetch: allow
+    44→  glob: allow
+    45→  grep: allow
+    46→  list: allow
+    47→  todowrite: allow
+    48→  question: allow
+    49→  skill: allow
+    50→---
+    51→
+    52→# WebForge Identity
+    53→You are Hermes, the COO of WebForge. The CEO (the user) gives you goals.
+    54→You do NOT do the work yourself. You analyze, delegate, and verify.
+    55→
+    56→## Your Job
+    57→1. Read the plan file at .webforge/plan.md (create it if it doesn't exist)
+    58→2. Check what's done vs what's left
+    59→3. If you can finish a task in your 35 tool calls — do it
+    60→4. If you can't — recruit agents by asking Voss (HR)
+    61→5. Delegate to recruited agents using the task tool
+    62→6. Collect their results
+    63→7. Update .webforge/plan.md with what's done
+    64→8. If everything is done, say "PROJECT COMPLETE"
+    65→9. If work remains, say "CONTINUE NEEDED: [what's left]"
+    66→
+    67→## Rules
+    68→- You CANNOT write code yourself (delegate to build agents)
+    69→- You CANNOT research yourself (delegate to intelligence agents)
+    70→- You CAN read files, create tasks, delegate, and verify
+    71→- You have 35 tool calls per session — use them wisely
+    72→- If an agent fails, recruit another one
+    73→- Everything is SEQUENTIAL — one agent at a time
+    74→
+    75→## When to Recruit
+    76→- Different areas + too much work = divide (create new agents)
+    77→- Same area + too much context = spawn copies (parallel workers)
+    78→- Small task = do it yourself or give to one agent
+    79→
+    80→## The 35-Call Rule
+    81→Every agent has 35 tool calls. If an agent can't finish in 35 calls:
+    82→- It will summarize what's left (OpenCode does this automatically)
+    83→- You read the summary
+    84→- You recruit another agent to continue
+    85→- The plan file tracks where things are
+    86→
+    87→# Battle-Tested Expertise
+    88→[Contents of multi-agent-coordinator.md from ankitmundada repo]
+    89→[Contents of task-distributor.md from ankitmundada repo]
+    90→[Contents of workflow-orchestrator.md from ankitmundada repo]
+    91→[Contents of task-router.md from ankitmundada repo]
+    92→```
+    93→
+    94→### Agent 2: Voss (HR — the recruiter)
+    95→
+    96→File: `~/.config/opencode/agents/voss.md`
+    97→
+    98→```markdown
+    99→---
+   100→description: "WebForge HR — recruits and creates agents on demand"
+   101→mode: subagent
+   102→steps: 35
+   103→permission:
+   104→  read: allow
+   105→  edit: allow
+   106→  bash: allow
+   107→  task: deny
+   108→  websearch: deny
+   109→  glob: allow
+   110→  grep: allow
+   111→  list: allow
+   112→  todowrite: deny
+   113→  question: allow
+   114→  skill: allow
+   115→---
+   116→
+   117→# WebForge Identity
+   118→You are Voss, the HR Director. Your ONLY job is to recruit agents.
+   119→
+   120→When Hermes tells you what kind of agent he needs:
+   121→1. Pick a name (use the registry at .webforge/registry.json for familiar names)
+   122→2. Find the right agent MD file from the repo library at .webforge/repo-agents/
+   123→3. Use the create_agent tool to write a new agent file to .opencode/agents/
+   124→4. Report back to Hermes with the agent name
+   125→
+   126→## What goes into a recruited agent file
+   127→- YAML frontmatter: permissions (based on role), steps: 35, mode: subagent
+   128→- Custom system prompt: identity, who they report to, what their job is
+   129→- Battle-tested agent MD files from the repo library (concatenated)
+   130→
+   131→## Agent Types and Permissions
+   132→- Coordinator/Lead: read=allow, edit=deny, bash=deny, task=allow (can delegate)
+   133→- Build worker: read=allow, edit=allow, bash=allow, task=deny (writes code)
+   134→- Researcher: read=allow, edit=deny, bash=deny, task=allow, websearch=allow
+   135→- Quality: read=allow, edit=deny, bash=allow, task=deny (tests only)
+   136→- Documentation: read=allow, edit=allow, bash=deny, task=deny (docs only)
+   137→
+   138→## Rules
+   139→- You do NOT do project work
+   140→- You do NOT delegate
+   141→- You ONLY create agent files
+   142→- One agent can combine multiple repo MD files (e.g., frontend-developer + react-specialist + typescript-pro)
+   143→- All recruited agents get steps: 35
+   144→
+   145→# Battle-Tested Expertise
+   146→[Contents of hr-pro.md from ankitmundada repo]
+   147→[Contents of agent-installer.md from ankitmundada repo]
+   148→[Contents of agent-organizer.md from ankitmundada repo]
+   149→```
+   150→
+   151→---
+   152→
+   153→## Phase 2: Custom Tools (2 files)
+   154→
+   155→### Tool 1: create_agent
+   156→
+   157→File: `~/.config/opencode/tools/create_agent.ts`
+   158→
+   159→**What it does:** HR calls this to create a new agent file on disk.
+   160→
+   161→**What it needs:**
+   162→- Agent name
+   163→- System prompt (custom identity)
+   164→- Repo agent files to include (from .webforge/repo-agents/)
+   165→- Permissions (can_edit, can_bash, can_delegate, can_websearch)
+   166→- Steps (always 35)
+   167→
+   168→**What it does:**
+   169→1. Reads the repo agent MD files from .webforge/repo-agents/
+   170→2. Concatenates them
+   171→3. Writes a new agent file to .opencode/agents/<name>.md
+   172→4. The file contains: YAML frontmatter + custom prompt + repo agent content
+   173→5. Returns: "Agent <name> created. Hermes can now spawn it."
+   174→
+   175→### Tool 2: update_plan
+   176→
+   177→File: `~/.config/opencode/tools/update_plan.ts`
+   178→
+   179→**What it does:** Hermes calls this to update the plan file.
+   180→
+   181→**What it needs:**
+   182→- Task ID
+   183→- Status (done, in_progress, blocked, remaining)
+   184→- Notes
+   185→
+   186→**What it does:**
+   187→1. Reads .webforge/plan.md
+   188→2. Updates the task status
+   189→3. Writes back to disk
+   190→4. Returns the updated plan
+   191→
+   192→---
+   193→
+   194→## Phase 3: The Loop (1 script)
+   195→
+   196→### The Ralph Loop Wrapper
+   197→
+   198→File: `~/.config/opencode/webforge-loop.sh`
+   199→
+   200→**What it does:** Keeps Hermes running autonomously until the project is done.
+   201→
+   202→```bash
+   203→#!/bin/bash
+   204→# WebForge Autonomous Loop (Ralph Loop pattern)
+   205→# Keeps re-launching Hermes until the plan is 100% complete
+   206→
+   207→PROJECT_DIR=$(pwd)
+   208→PLAN_FILE="$PROJECT_DIR/.webforge/plan.md"
+   209→MAX_ITERATIONS=50  # Safety limit
+   210→
+   211→for i in $(seq 1 $MAX_ITERATIONS); do
+   212→    echo "=== WebForge Loop Iteration $i ==="
+   213→    
+   214→    # Check if plan says COMPLETE
+   215→    if [ -f "$PLAN_FILE" ]; then
+   216→        if grep -q "PROJECT COMPLETE" "$PLAN_FILE"; then
+   217→            echo "✅ Project complete! Stopping loop."
+   218→            exit 0
+   219→        fi
+   220→    fi
+   221→    
+   222→    # Launch Hermes
+   223→    echo "Launching Hermes..."
+   224→    opencode run "Continue the WebForge project. Read .webforge/plan.md to see what's done and what's left. Recruit agents if needed. Update the plan as you go. Say PROJECT COMPLETE only when everything is verified done."
+   225→    
+   226→    # Check again after Hermes finishes
+   227→    if grep -q "PROJECT COMPLETE" "$PLAN_FILE" 2>/dev/null; then
+   228→        echo "✅ Project complete! Stopping loop."
+   229→        exit 0
+   230→    fi
+   231→    
+   232→    echo "Work remains. Relaunching Hermes in 5 seconds..."
+   233→    sleep 5
+   234→done
+   235→
+   236→echo "⚠️ Reached max iterations ($MAX_ITERATIONS). Stopping."
+   237→echo "Check .webforge/plan.md for remaining work."
+   238→```
+   239→
+   240→**How it works:**
+   241→1. Script checks if plan.md says "PROJECT COMPLETE"
+   242→2. If not — launches Hermes via `opencode run`
+   243→3. Hermes runs (35 tool calls), recruits agents, delegates, updates plan
+   244→4. Hermes exits
+   245→5. Script checks plan again
+   246→6. If not done — re-launches Hermes (fresh 35 calls)
+   247→7. Repeats until complete or max iterations reached
+   248→
+   249→---
+   250→
+   251→## Phase 4: The Repo Agent Library
+   252→
+   253→### Setup (one-time)
+   254→
+   255→Clone the two repos into `.webforge/repo-agents/`:
+   256→
+   257→```bash
+   258→mkdir -p .webforge/repo-agents
+   259→cd .webforge/repo-agents
+   260→
+   261→# Clone ankitmundada (128 agents in 10 categories)
+   262→git clone https://github.com/ankitmundada/awesome-opencode-subagents.git ankitmundada
+   263→
+   264→# Clone jbeck018 (95 agents flat)
+   265→git clone https://github.com/jbeck018/agents-opencode.git jbeck018
+   266→```
+   267→
+   268→### How HR uses the library
+   269→
+   270→When Hermes says "I need a frontend developer," HR:
+   271→1. Searches `.webforge/repo-agents/` for `frontend-developer.md`
+   272→2. Finds it in `ankitmundada/categories/01-core-development/frontend-developer.md`
+   273→3. Reads the file content
+   274→4. Combines it with other relevant files (e.g., `react-specialist.md`, `typescript-pro.md`)
+   275→5. Writes a new agent file to `.opencode/agents/recruited-01.md`
+   276→
+   277→### Updating the library
+   278→
+   279→When the repos update:
+   280→```bash
+   281→cd .webforge/repo-agents/ankitmundada && git pull
+   282→cd .webforge/repo-agents/jbeck018 && git pull
+   283→```
+   284→
+   285→HR always reads from the latest version. No rebuild needed.
+   286→
+   287→---
+   288→
+   289→## Phase 5: Worktree Isolation
+   290→
+   291→### Install the worktree plugin
+   292→
+   293→```bash
+   294→# Install opencode-worktree plugin
+   295→# (follow the plugin's installation instructions)
+   296→```
+   297→
+   298→### How worktrees work in the flow
+   299→
+   300→1. Hermes recruits an agent for a task
+   301→2. Before the agent starts, a worktree is created: `.worktrees/<agent-name>/`
+   302→3. The agent works in the worktree (can't touch main branch)
+   303→4. When the agent finishes, the worktree branch is merged back
+   304→5. The worktree is cleaned up
+   305→6. The next agent gets a fresh worktree
+   306→
+   307→### Configuration
+   308→
+   309→The worktree plugin should be configured to:
+   310→- Create worktrees in `.worktrees/`
+   311→- Auto-merge when the agent finishes
+   312→- Clean up after merge
+   313→- Keep the main directory read-only for context
+   314→
+   315→---
+   316→
+   317→## Phase 6: Skills Installation
+   318→
+   319→### Install skill repos (one-time)
+   320→
+   321→```bash
+   322→# Install Vercel skills
+   323→npx skills add vercel-labs/agent-skills --skill frontend-design -a opencode
+   324→npx skills add vercel-labs/agent-skills --skill nextjs-performance -a opencode
+   325→
+   326→# Install Gentleman skills
+   327→npx skills add Gentleman-Programming/Gentleman-Skills --skill react-19 -a opencode
+   328→npx skills add Gentleman-Programming/Gentleman-Skills --skill typescript -a opencode
+   329→
+   330→# Install FrancoStino collection (1595+ skills)
+   331→# Browse and install specific skills as needed
+   332→```
+   333→
+   334→### How skills work
+   335→
+   336→Skills are NOT part of the agent file. They are NOT assigned by HR.
+   337→
+   338→Each agent has `skill: allow` in its permissions. When an agent runs and needs expertise (e.g., "how to structure a Next.js component"), it uses OpenCode's built-in `skill` tool to load the relevant skill on-demand.
+   339→
+   340→The agent decides what skill it needs. Nobody assigns skills.
+   341→
+   342→---
+   343→
+   344→## Phase 6.5: MCPs (External Connections)
+   345→
+   346→### What MCPs Are
+   347→
+   348→MCPs connect OpenCode to external services. Once installed at the project level, all agents can use them (filtered by their permissions). You install once, every recruited agent benefits.
+   349→
+   350→### MCP Stack
+   351→
+   352→| MCP | What It Does | Priority | Who Uses It |
+   353→|---|---|---|---|
+   354→| **Context7** | Fetches CURRENT documentation for 9,000+ libraries | ✅ CRITICAL | All build agents — prevents outdated API usage |
+   355→| **GitHub MCP** | Read repos, create PRs, manage issues, branches | ✅ CRITICAL | Build workers, commit agents |
+   356→| **Exa MCP** | Semantic web search designed for AI agents | ✅ HIGH | Intelligence/research agents |
+   357→| **Firecrawl MCP** | Scrape any website into clean markdown | ⚠️ MEDIUM | Intelligence (Dorian, research) |
+   358→| **Playwright MCP** | Browser automation for e2e testing | ⚠️ MEDIUM | Quality agents (testing) |
+   359→| **Sentry MCP** | Error tracking, stack traces | ⚠️ LATER | Quality agents (debugging) |
+   360→| **Vercel MCP** | Deploy, check status, rollback | ⚠️ LATER | Build/DB agents (deployment) |
+   361→| **Supabase MCP** | Direct database access | ⚠️ LATER | DB/Infra agents |
+   362→
+   363→### Installation
+   364→
+   365→MCPs are configured in `opencode.json` or `.opencode/mcp.json`:
+   366→
+   367→```json
+   368→{
+   369→  "mcp": {
+   370→    "context7": {
+   371→      "command": "npx",
+   372→      "args": ["-y", "@upstash/context7-mcp"]
+   373→    },
+   374→    "github": {
+   375→      "command": "npx",
+   376→      "args": ["-y", "@modelcontextprotocol/server-github"],
+   377→      "env": {
+   378→        "GITHUB_TOKEN": "your-token-here"
+   379→    },
+   380→    "exa": {
+   381→      "command": "npx",
+   382→      "args": ["-y", "exa-mcp-server"],
+   383→      "env": {
+   384→        "EXA_API_KEY": "your-key-here"
+   385→      }
+   386→    }
+   387→  }
+   388→}
+   389→```
+   390→
+   391→### Why Context7 replaces most library skills
+   392→
+   393→Instead of installing a skill file for Next.js, another for Tailwind, another for Supabase — and having them go outdated when the library updates — Context7 serves live, current documentation through ONE MCP connection.
+   394→
+   395→- Agent needs to know Next.js 16 routing? → asks Context7 → gets current docs
+   396→- Agent needs Tailwind v4 config? → asks Context7 → gets current docs
+   397→- Agent needs Supabase RLS patterns? → asks Context7 → gets current docs
+   398→
+   399→**One connection, 9,000+ libraries, always up-to-date.** This replaces most library-specific skill installations.
+   400→
+   401→### Custom Tools (built by us)
+   402→
+   403→These are WebForge-specific tools — TypeScript files in `.opencode/tools/`:
+   404→
+   405→| Tool | File | Who Uses It | What It Does |
+   406→|---|---|---|---|
+   407→| **create_agent** | `create_agent.ts` | Voss (HR) | Creates new agent files on disk from repo templates |
+   408→| **update_plan** | `update_plan.ts` | Hermes | Updates the plan file (.webforge/plan.md) |
+   409→| **mailbox** | `mailbox.ts` | All agents | Send messages (enforces chain of command) |
+   410→| **safe_edit** | `safe_edit.ts` | Build workers | Edit files with Law 2 (300-line check) + Law 5 (Flagger) + Law 6 (log) |
+   411→| **safe_bash** | `safe_bash.ts` | Build workers | Run commands with dangerous-op blocking + logging |
+   412→| **revoke** | `revoke.ts` | Daedalus/Hermes | Strip tools from misbehaving agents |
+   413→| **status** | `status.ts` | All agents | Report status to superior (working/done/blocked) |
+   414→
+   415→### How permissions control tool access
+   416→
+   417→An agent only sees the tools its permissions allow. The `safe_edit` and `safe_bash` tools **replace** OpenCode's built-in `edit` and `bash` — the agent doesn't know the difference, but our versions enforce the 6 laws.
+   418→
+   419→---
+   420→
+   421→## Phase 6.7: Context Tools (Repomix + Context7 + ast-grep)
+   422→
+   423→These three tools solve the biggest problem with large projects like Athletica (414+ files): agents wasting all 35 tool calls just trying to understand the codebase.
+   424→
+   425→### Tool 1: Repomix — MANDATORY for large projects
+   426→
+   427→**Problem:** An agent has 35 tool calls. If it reads files one by one to understand a 414-file project like Athletica, it burns 50+ calls just looking around. It never gets to do actual work.
+   428→
+   429→**What Repomix does:** Packs the ENTIRE project — file tree + important file contents — into ONE text file. The agent reads it in ONE tool call and understands the whole project instantly.
+   430→
+   431→**Before Repomix (wasted calls):**
+   432→```
+   433→Call 1: read package.json
+   434→Call 2: read src/app/page.tsx
+   435→Call 3: read src/components/Header.tsx
+   436→Call 4: read src/components/Footer.tsx
+   437→...
+   438→Call 35: (still reading, no work done)
+   439→```
+   440→
+   441→**With Repomix (efficient):**
+   442→```
+   443→Call 1: read .webforge/project-snapshot.txt (entire project packed)
+   444→Calls 2-35: actual work (writing code, running tests, etc.)
+   445→```
+   446→
+   447→**Installation:**
+   448→```bash
+   449→npm install -g repomix
+   450→```
+   451→
+   452→**Usage in agent system prompt:**
+   453→```
+   454→Before starting work, run `repomix` to pack the project into a single file.
+   455→Read the output file to understand the full project structure.
+   456→Then start working.
+   457→```
+   458→
+   459→**For Athletica specifically:** Repomix is not optional. Without it, no agent can understand Athletica in 35 tool calls. With it, they understand it in 1 call.
+   460→
+   461→### Tool 2: Context7 — MANDATORY (replaces library skills)
+   462→
+   463→**Problem:** Skill files for libraries (Next.js, Tailwind, Supabase) go outdated. Next.js updates to v16 but the skill file still describes v15. Agent follows old patterns, breaks things.
+   464→
+   465→**What Context7 does:** ONE MCP connection serves live, current documentation for 9,000+ libraries. When an agent needs to know "how does Next.js 16 routing work?", it asks Context7 and gets the real current docs — not a stale skill file.
+   466→
+   467→**What it replaces:**
+   468→- ❌ Install Next.js skill → Context7 has it live
+   469→- ❌ Install Tailwind skill → Context7 has it live
+   470→- ❌ Install Supabase skill → Context7 has it live
+   471→- ❌ Install 100 library skills → Context7 covers all of them
+   472→
+   473→**Installation:** Already covered in the MCP section above. One MCP entry, done.
+   474→
+   475→**For Athletica specifically:** Athletica uses Next.js, Tailwind, Prisma, Supabase. All of these have frequently-updating APIs. Context7 ensures agents always use the current version's patterns.
+   476→
+   477→### Tool 3: ast-grep — MANDATORY for refactors
+   478→
+   479→**Problem:** Regular `grep` searches for TEXT, not CODE. If an agent searches for `getX` to rename it, grep finds:
+   480→- `const result = getX()` ✅ (the function call — what we want)
+   481→- `// TODO: remove getX later` ❌ (a comment — false match)
+   482→- `function getXName()` ❌ (a different function — false match)
+   483→
+   484→The agent wastes calls fixing false matches and breaks things that weren't broken.
+   485→
+   486→**What ast-grep does:** Understands CODE STRUCTURE. It knows the difference between a function call, a comment, and a variable name. When you say "rename every `getX` to `useX`", ast-grep only changes actual function calls.
+   487→
+   488→**Installation:**
+   489→```bash
+   490→npm install -g @ast-grep/cli
+   491→```
+   492→
+   493→**Usage in agent system prompt:**
+   494→```
+   495→When refactoring (renaming, restructuring), use ast-grep instead of grep.
+   496→ast-grep understands code structure and avoids false matches.
+   497→Example: ast-grep run --pattern 'getX()' --rewrite 'useX()' --lang typescript
+   498→```
+   499→
+   500→**For Athletica specifically:** Athletica has 414 files. When an agent needs to rename a function or restructure components, ast-grep ensures it changes the right things across all 414 files without false matches.
+   501→
+   502→### How all three work together
+   503→
+   504→```
+   505→Agent starts (35 tool calls available):
+   506→  Call 1: Repomix → reads entire project (1 call, understands everything)
+   507→  Call 2: Context7 → fetches current Next.js docs (1 call, latest patterns)
+   508→  Call 3-30: Writes code using latest patterns
+   509→  Call 31: ast-grep → renames a function across all 414 files (1 call, no false matches)
+   510→  Call 32-35: Verifies, commits, reports
+   511→```
+   512→
+   513→Without these tools:
+   514→```
+   515→Call 1-35: Still reading files, never gets to write any code
+   516→```
+   517→
+   518→---
+   519→
+   520→## Phase 7: The Registry (naming only)
+   521→
+   522→File: `.webforge/registry.json`
+   523→
+   524→A simple JSON file with familiar names and their roles. HR uses this to pick names when recruiting.
+   525→
+   526→```json
+   527→{
+   528→  "hermes": { "role": "coordinator", "title": "COO" },
+   529→  "voss": { "role": "hr", "title": "HR Director" },
+   530→  "athena": { "role": "intelligence", "title": "Intelligence Director" },
+   531→  "hephaestus": { "role": "build", "title": "Build Director" },
+   532→  "minos": { "role": "quality", "title": "Quality Director" },
+   533→  "thoth": { "role": "documentation", "title": "Documentation Director" },
+   534→  "daedalus": { "role": "meta", "title": "Meta Engineering Director" }
+   535→}
+   536→```
+   537→
+   538→When Hermes says "I need someone like Athena for intelligence," HR looks up "athena" in the registry, sees it's an intelligence role, and creates an agent with that name + research agent MD files.
+   539→
+   540→---
+   541→
+   542→## The Complete File Structure
+   543→
+   544→```
+   545→~/.config/opencode/
+   546→  agents/
+   547→    hermes.md              ← Permanent (coordinator)
+   548→    voss.md                ← Permanent (HR recruiter)
+   549→  tools/
+   550→    create_agent.ts         ← HR uses this to create agents
+   551→    update_plan.ts          ← Hermes uses this to track progress
+   552→
+   553→.webforge/
+   554→  plan.md                  ← The shared plan file (Hermes reads/writes this)
+   555→  registry.json            ← Name lookup for HR
+   556→  repo-agents/             ← Downloaded agent MD files from repos
+   557→    ankitmundada/          ← 128 agents in 10 categories
+   558→    jbeck018/              ← 95 agents flat
+   559→
+   560→.opencode/
+   561→  agents/                  ← Recruited agents (created by HR, project-scoped)
+   562→    recruited-01.md        ← Created during the project, deleted after
+   563→    recruited-02.md
+   564→    ...
+   565→
+   566→.worktrees/                ← Isolated workspaces (one per agent)
+   567→  recruited-01/
+   568→  recruited-02/
+   569→
+   570→webforge-loop.sh           ← The Ralph Loop wrapper script
+   571→```
+   572→
+   573→---
+   574→
+   575→## The Complete Flow
+   576→
+   577→```
+   578→1. You start the loop:
+   579→   $ bash webforge-loop.sh
+   580→
+   581→2. Loop launches Hermes:
+   582→   "Build Athletica — a sports marketplace"
+   583→
+   584→3. Hermes (35 calls):
+   585→   - Creates .webforge/plan.md with tasks
+   586→   - "I need intelligence research first"
+   587→   - Calls task("voss", "Create an intelligence researcher")
+   588→   
+   589→4. Voss (35 calls):
+   590→   - Reads .webforge/repo-agents/ankitmundada/categories/10-research-analysis/research-analyst.md
+   591→   - Reads search-specialist.md, data-researcher.md
+   592→   - Uses create_agent tool to write .opencode/agents/athena.md
+   593→   - Returns to Hermes: "Athena is ready"
+   594→
+   595→5. Hermes calls task("athena", "Research sports marketplace"):
+   596→   
+   597→6. Athena (35 calls):
+   598→   - Reads the task
+   599→   - Loads skills on-demand (websearch skill, research methodology skill)
+   600→   - Researches the sports marketplace
+   601→   - If too big: asks Hermes to recruit more research agents
+   602→   - If done: returns research summary to Hermes
+   603→
+   604→7. Hermes updates plan.md:
+   605→   - "Research: DONE"
+   606→   - "Build: REMAINING"
+   607→
+   608→8. Hermes exits. Loop checks plan — not done. Re-launches Hermes.
+   609→
+   610→9. Hermes (fresh 35 calls):
+   611→   - Reads plan.md — sees research is done, build is remaining
+   612→   - Calls task("voss", "Create a build director")
+   613→
+   614→10. Voss creates hephaestus.md from backend-architect + fullstack-developer
+   615→
+   616→11. Hermes calls task("hephaestus", "Build based on research"):
+   617→    
+   618→12. Hephaestus (35 calls):
+   619→    - Reads research
+   620→    - "I need frontend, backend, and database workers"
+   621→    - Calls task("voss", "Create 3 build workers")
+   622→
+   623→13. Voss creates:
+   624→    - .opencode/agents/recruited-01.md (frontend-developer + react-specialist + typescript-pro)
+   625→    - .opencode/agents/recruited-02.md (backend-developer + api-designer)
+   626→    - .opencode/agents/recruited-03.md (database-admin + postgres-pro)
+   627→
+   628→14. Hephaestus delegates SEQUENTIALLY:
+   629→    - task("recruited-01", "Build frontend") → runs in worktree → finishes → merges
+   630→    - task("recruited-02", "Build backend") → runs in worktree → finishes → merges
+   631→    - task("recruited-03", "Build database") → runs in worktree → finishes → merges
+   632→
+   633→15. Hephaestus returns to Hermes: "Build complete"
+   634→
+   635→16. Hermes updates plan.md:
+   636→    - "Research: DONE"
+   637→    - "Build: DONE"
+   638→    - "PROJECT COMPLETE"
+   639→
+   640→17. Loop checks plan — says COMPLETE. Stops.
+   641→
+   642→18. You get: "Athletica is built."
+   643→```
+   644→
+   645→---
+   646→
+   647→## Implementation Order
+   648→
+   649→### Step 1 (Day 1): Create the 2 permanent agent files
+   650→- hermes.md (with repo agent MD files concatenated)
+   651→- voss.md (with HR repo agent MD files concatenated)
+   652→- Download the repo agent MD files and concatenate them
+   653→
+   654→### Step 2 (Day 1): Create the 2 custom tools
+   655→- create_agent.ts (HR's agent creation tool)
+   656→- update_plan.ts (Hermes's plan tracking tool)
+   657→
+   658→### Step 3 (Day 1): Create the loop script
+   659→- webforge-loop.sh (Ralph Loop wrapper)
+   660→
+   661→### Step 4 (Day 2): Set up the repo library
+   662→- Clone ankitmundada and jbeck018 repos
+   663→- Create registry.json
+   664→
+   665→### Step 5 (Day 2): Install MCPs + Context Tools
+   666→- Install Context7 MCP (live library docs — replaces library skill files)
+   667→- Install GitHub MCP (repo management)
+   668→- Install Exa MCP (semantic search for research agents)
+   669→- Install Repomix globally (`npm install -g repomix`)
+   670→- Install ast-grep globally (`npm install -g @ast-grep/cli`)
+   671→- Install skills (Vercel, Gentleman — for non-library expertise like design patterns)
+   672→
+   673→### Step 6 (Day 2): Install worktree plugin
+   674→- Install opencode-worktree plugin
+   675→- Configure for auto-merge
+   676→
+   677→### Step 7 (Day 3): Test end-to-end
+   678→- Give Hermes a simple task
+   679→- Watch: Hermes → Voss → recruited agent → work → report → plan update
+   680→- Verify the loop works autonomously
+   681→
+   682→### Step 8 (Day 3): Test with a real project
+   683→- Give Hermes "Build a login page"
+   684→- Watch the full flow: research → recruit → build → verify → complete
+   685→
+   686→---
+   687→
+   688→## What We're NOT Building (anymore)
+   689→
+   690→| Old Approach | New Approach |
+   691→|---|---|
+   692→| 283 agents from the start | 2 permanent agents, rest recruited on demand |
+   693→| Fixed departments | Dynamic — departments created when needed |
+   694→| Python scripts | OpenCode native — agents, tools, plugins |
+   695→| WebForge Office (standalone TS) | OpenCode terminal UI |
+   696→| Fixed 82 areas | Areas as a guideline map, not fixed |
+   697→| Skills written from scratch | Skills installed from repos |
+   698→| System prompts written from scratch | Repo agent MD files + custom identity prompt |
+   699→| Custom runtime (runtime.ts) | OpenCode's native agent loop |
+   700→| Custom watchdog | OpenCode's steps: 35 + plan file |
+   701→| Custom campus UI | OpenCode's terminal UI |
+   702→| SQLite state tracking | Plan file (.webforge/plan.md) on disk |
+   703→
+   704→---
+   705→
+   706→## Key Decisions Summary
+   707→
+   708→1. **OpenCode-native** — not a standalone system
+   709→2. **2 permanent agents** — Hermes + Voss (HR)
+   710→3. **Dynamic recruiting** — HR creates agents on demand from repo templates
+   711→4. **Agent = custom prompt + repo MD files** — concatenated into one file
+   712→5. **35 tool-call limit** — using OpenCode's `steps: 35`
+   713→6. **Ralph Loop** — wrapper script re-launches Hermes until plan is done
+   714→7. **Plan file** — .webforge/plan.md as shared memory on disk
+   715→8. **Worktree isolation** — each agent works in its own git worktree
+   716→9. **Skills on-demand** — agents load skills themselves at runtime
+   717→10. **Sequential execution** — one agent at a time, no parallel
+   718→11. **Registry for naming** — HR uses familiar names from registry
+   719→12. **No forced model** — OpenCode uses whatever model is configured
+   720→13. **Fully autonomous** — you start the loop, walk away, come back to results
+   721→14. **Areas as guideline** — not fixed, used to decide divide vs parallel
+   722→15. **Repo agent library** — downloaded, not copied — updates flow through
+   723→16. **MCPs** — Context7 (live docs), GitHub (repos), Exa (search) — one setup, all agents use
+   724→17. **Custom Tools** — safe_edit, safe_bash, mailbox, revoke, create_agent, update_plan, status
+   725→18. **Repomix** — MANDATORY for large projects — packs 414-file project into 1 tool call
+   726→19. **Context7** — MANDATORY — replaces 100+ library skill files with 1 live MCP connection
+   727→20. **ast-grep** — MANDATORY for refactors — smart code search that understands structure
+   728→
