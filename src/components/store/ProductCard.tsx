@@ -1,12 +1,31 @@
 "use client"
 import Link from "next/link"
 import { ShoppingCart } from "lucide-react"
-import { Product, formatPrice, formatUSD } from "@/lib/data"
 import { useCart } from "@/lib/cart-store"
 
-export function ProductCard({ product }: { product: Product }) {
+// Product type — defined locally, no server imports
+interface ProductCardProps {
+  product: {
+    slug: string
+    name: string
+    price: string
+    mainImage?: string
+  }
+}
+
+function parsePrice(priceStr: string): number {
+  if (!priceStr) return 0
+  const m = priceStr.match(/\$([\d,.]+)/)
+  return m ? parseFloat(m[1].replace(/,/g, "")) : 0
+}
+
+function formatUSD(n: number): string {
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(n)
+}
+
+export function ProductCard({ product }: { product: ProductCardProps["product"] }) {
   const addItem = useCart(s => s.addItem)
-  const price = formatPrice(product.price)
+  const price = parsePrice(product.price)
 
   return (
     <div className="group rounded-lg border border-[#33383D] bg-[#1A1C1F] p-4 transition-colors hover:border-[#E21818]">
