@@ -69,8 +69,8 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-[#141618]">
-      {/* Top utility bar — bg #1A1C1F per crawled CSS */}
-      <div className="border-b border-[#33383D]/50 bg-[#1A1C1F] px-4 py-1.5 text-[11px] text-[#9B9C9E]">
+      {/* Top utility bar — desktop only (md+), bg #1A1C1F per crawled CSS */}
+      <div className="hidden border-b border-[#33383D]/50 bg-[#1A1C1F] px-4 py-1.5 text-[11px] text-[#9B9C9E] md:block">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <span className="flex items-center gap-1.5">
             <Truck className="h-3 w-3 text-[#E21818]" />
@@ -89,18 +89,38 @@ export function Header() {
         </div>
       </div>
 
-      {/* Logo bar — centered logo per screenshot */}
-      <div className="border-b border-[#33383D]/30 py-4">
-        <div className="mx-auto flex max-w-7xl items-center justify-center">
+      {/* Mobile bar (sm to md): hamburger LEFT, logo CENTER, cart RIGHT */}
+      {/* Desktop (md+): centered logo only */}
+      <div className="flex items-center justify-between border-b border-[#33383D]/30 px-4 py-3 md:block md:py-4">
+        {/* Mobile: hamburger left */}
+        <button
+          className="text-[#9B9C9E] hover:text-white md:hidden"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Menu"
+        >
+          {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
+
+        {/* Logo — centered on all sizes */}
+        <div className="flex flex-1 justify-center md:flex-none md:py-0">
           <Link href="/" className="flex items-center gap-3">
-            <img src="/musicplace/logo-dark.png" alt="SOUND MUSIC STORE" className="h-12 w-auto" />
+            <img src="/musicplace/logo-dark.png" alt="SOUND MUSIC STORE" className="h-9 w-auto md:h-12" />
           </Link>
         </div>
+
+        {/* Mobile: cart right */}
+        <Link
+          href="/cart"
+          className="flex items-center gap-1.5 rounded border border-[#33383D] bg-transparent px-3 py-1.5 text-xs font-bold text-white hover:bg-[#1A1C1F] md:hidden"
+          aria-label="Cart"
+        >
+          <ShoppingCart className="h-4 w-4" />
+          <span>{count}</span>
+        </Link>
       </div>
 
-      {/* Nav bar */}
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2">
-        {/* Desktop nav */}
+      {/* Nav bar — desktop only */}
+      <div className="mx-auto hidden max-w-7xl items-center justify-between px-4 py-2 md:flex">
         <nav className="hidden flex-1 items-center justify-center gap-1 md:flex">
           {NAV.map((item) => (
             <div
@@ -140,9 +160,9 @@ export function Header() {
           ))}
         </nav>
 
-        {/* Right side: search + cart */}
+        {/* Right side: search + cart (desktop) */}
         <div className="flex items-center gap-3">
-          <button className="text-[#9B9C9E] hover:text-white">
+          <button className="text-[#9B9C9E] hover:text-white" aria-label="Search">
             <Search className="h-5 w-5" />
           </button>
           <Link
@@ -152,12 +172,6 @@ export function Header() {
             <ShoppingCart className="h-4 w-4" />
             <span>{count}</span>
           </Link>
-          <button
-            className="text-[#9B9C9E] md:hidden"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
         </div>
       </div>
 
