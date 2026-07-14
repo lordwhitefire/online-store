@@ -10,7 +10,7 @@ export default function AboutPage() {
       <main className="flex-1">
         {/* Page Title Bar */}
         <div className="border-b border-[#33383D] bg-[#1A1C1F] py-8 text-center">
-          <h1 className="text-3xl font-bold uppercase text-white" style={{ fontFamily: "var(--font-lato)" }}>About Us Style 1</h1>
+          <h1 className="text-3xl font-bold uppercase text-white" style={{ fontFamily: "var(--font-lato)" }}>About Us</h1>
           <nav className="mt-2 text-xs text-[#9B9C9E]">
             <Link href="/" className="hover:text-[#E21818]">Home</Link>
             <span className="mx-1">/</span>
@@ -26,9 +26,9 @@ export default function AboutPage() {
               <h2 className="text-2xl font-bold uppercase text-white" style={{ fontFamily: "var(--font-lato)" }}>What Makes us Different?</h2>
               <span className="h-px w-12 bg-[#33383D]" />
             </div>
-            {/* Full-width image with overlay text */}
+            {/* Full-width image with overlay text — using guitar image */}
             <div className="relative flex min-h-[400px] items-center overflow-hidden rounded-lg">
-              <img src="/musicplace/images/home/workshop-bg.png" alt="" className="absolute inset-0 h-full w-full object-cover" style={{ filter: "grayscale(100%)" }} />
+              <img src="/musicplace/images/home/3-2.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" style={{ filter: "grayscale(100%)" }} />
               <div className="absolute inset-0 bg-gradient-to-l from-[#141618]/90 via-[#141618]/50 to-transparent" />
               <div className="relative z-10 ml-auto w-full max-w-md p-8 text-right">
                 <h3 className="mb-2 text-3xl font-bold text-white" style={{ fontFamily: "var(--font-lato)" }}>The Music Workshop</h3>
@@ -48,7 +48,7 @@ export default function AboutPage() {
               <h2 className="text-2xl font-bold uppercase text-white" style={{ fontFamily: "var(--font-lato)" }}>Meet Our Experts</h2>
               <span className="h-px w-12 bg-[#33383D]" />
             </div>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               {/* Team Member 1 */}
               <div className="flex gap-4 bg-[#141618] p-6">
                 <img src="/musicplace/images/our-staff/team-1-270x220.jpg" alt="" className="h-32 w-32 shrink-0 object-cover" />
@@ -68,7 +68,7 @@ export default function AboutPage() {
                 <img src="/musicplace/images/our-staff/team-2-270x220.jpg" alt="" className="h-32 w-32 shrink-0 object-cover" />
                 <div>
                   <h3 className="text-lg font-bold uppercase text-white">Eula Rose</h3>
-                  <p className="mb-2 text-xs text-[#E21818]">Sound Engineer</p>
+                  <p className="mb-2 text-xs text-[#E21818]">Manager</p>
                   <p className="mb-3 text-xs leading-relaxed text-[#9B9C9E]">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
                   <div className="flex gap-2">
                     <Facebook className="h-4 w-4 text-[#9B9C9E] hover:text-[#E21818] cursor-pointer" />
@@ -81,7 +81,7 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Section 3: What People Say? (Testimonials) */}
+        {/* Section 3: What People Say? */}
         <div className="py-12">
           <div className="mx-auto max-w-7xl px-4">
             <div className="mb-8 flex items-center justify-center gap-4">
@@ -89,9 +89,9 @@ export default function AboutPage() {
               <h2 className="text-2xl font-bold uppercase text-white" style={{ fontFamily: "var(--font-lato)" }}>What People Say?</h2>
               <span className="h-px w-12 bg-[#33383D]" />
             </div>
-            {/* Testimonial with background image */}
+            {/* Testimonial with generated background image */}
             <div className="relative flex min-h-[350px] items-center justify-center overflow-hidden rounded-lg">
-              <img src="/musicplace/images/home/promo-studio.png" alt="" className="absolute inset-0 h-full w-full object-cover opacity-30" />
+              <img src="/musicplace/images/home/tile-cables.png" alt="" className="absolute inset-0 h-full w-full object-cover opacity-30" />
               <div className="absolute inset-0 bg-[#141618]/80" />
               <div className="relative z-10 mx-auto max-w-2xl px-8 text-center">
                 <Quote className="mx-auto mb-4 h-10 w-10 text-[#E21818]" />
@@ -104,11 +104,16 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Brand Logos */}
+        {/* Brand Logos — using actual brand images from crawl (white logos on dark bg) */}
         <section className="border-y border-[#33383D] bg-[#1A1C1F] py-8">
           <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-10 gap-y-4 px-4">
-            {["THE QUOTEZONE", "JØRGEN GROTDAL", "TRACT", "FAMOUSTHEORY", "TATES"].map(b => (
-              <span key={b} className="text-sm font-bold uppercase tracking-wider text-[#9B9C9E] hover:text-white">{b}</span>
+            {["1-1.png", "2-1.png", "3-1.png", "4-1.png", "5-1.png", "6-1.png"].map(logo => (
+              <img
+                key={logo}
+                src={`/musicplace/images/about-us/${logo}`}
+                alt="Brand"
+                className="h-12 w-auto opacity-60 transition-opacity hover:opacity-100"
+              />
             ))}
           </div>
         </section>
