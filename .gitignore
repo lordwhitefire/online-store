@@ -19,3 +19,6 @@ upload/
 tool-results/
 screenshots-rebuilt/
 scripts/screenshot*.js
+
+# clerk configuration (can include secrets)
+/.clerk/
