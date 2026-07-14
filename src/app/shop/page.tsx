@@ -2,7 +2,7 @@ import { Header } from "@/components/store/Header"
 import { Footer } from "@/components/store/Footer"
 import { ProductCard } from "@/components/store/ProductCard"
 import { getProducts } from "@/lib/data"
-import { Search, Grid3x3, List } from "lucide-react"
+import { Grid3x3, List } from "lucide-react"
 
 export default function ShopPage() {
   const products = getProducts()
@@ -72,24 +72,7 @@ export default function ShopPage() {
                 <button className="w-full bg-[#E21818] py-2 text-xs font-bold uppercase text-white hover:bg-[#C51515]">Filter</button>
               </div>
 
-              {/* Product Categories Widget */}
-              <div className="mb-6 bg-[#1A1C1F] p-4">
-                <h3 className="mb-3 border-b border-[#33383D] pb-2 text-sm font-bold uppercase text-white">Product Categories</h3>
-                <ul className="space-y-2 text-xs">
-                  {["Accessories", "Audio Interfaces", "Audio Workstations", "Bags and Cases", "Band & Orchestra", "Controllers", "DJ & Karaoke", "Headphones", "Instruments", "MIDI Controllers", "MIDI Interfaces", "Mixers", "Mouthpieces", "Recording", "Software"].map(cat => (
-                    <li key={cat}><a href={`/category/${cat.toLowerCase().replace(/\s+/g, "-").replace("&", "and")}`} className="text-[#9B9C9E] hover:text-[#E21818]">{cat}</a></li>
-                  ))}
-                </ul>
-              </div>
 
-              {/* Search Widget */}
-              <div className="bg-[#1A1C1F] p-4">
-                <h3 className="mb-3 border-b border-[#33383D] pb-2 text-sm font-bold uppercase text-white">Search</h3>
-                <div className="flex">
-                  <input type="text" placeholder="Search products…" className="flex-1 border border-[#33383D] bg-[#141618] px-3 py-2 text-xs text-white placeholder:text-[#9B9C9E] focus:outline-none" />
-                  <button className="bg-[#E21818] px-3 py-2 text-white hover:bg-[#C51515]" aria-label="Search"><Search className="h-4 w-4" /></button>
-                </div>
-              </div>
             </aside>
           </div>
         </div>
