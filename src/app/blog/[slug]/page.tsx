@@ -121,7 +121,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </div>
 
             {/* RIGHT: Sidebar */}
-            <aside className="lg:w-[30%]">
+            <aside className="lg:w-[30%]"><div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1">
               {/* Search */}
               <div className="mb-4 bg-[#1A1C1F] p-4">
                 <h3 className="mb-3 border-b border-[#33383D] pb-2 text-sm font-bold uppercase text-white">Search</h3>
@@ -196,6 +196,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   <Instagram className="h-5 w-5 text-[#9B9C9E] hover:text-[#E21818] cursor-pointer" />
                   <Linkedin className="h-5 w-5 text-[#9B9C9E] hover:text-[#E21818] cursor-pointer" />
                 </div>
+              </div>
               </div>
             </aside>
           </div>
