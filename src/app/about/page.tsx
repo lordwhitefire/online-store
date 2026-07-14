@@ -26,15 +26,18 @@ export default function AboutPage() {
               <h2 className="text-2xl font-bold uppercase text-white" style={{ fontFamily: "var(--font-lato)" }}>What Makes us Different?</h2>
               <span className="h-px w-12 bg-[#33383D]" />
             </div>
-            {/* Full-width image with overlay text — using guitar image */}
+            {/* Full-width image with overlay text — 50/50 split, image fades into solid black */}
             <div className="relative flex min-h-[400px] items-center overflow-hidden rounded-lg">
               <img src="/musicplace/images/home/3-2.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" style={{ filter: "grayscale(100%)" }} />
-              <div className="absolute inset-0 bg-gradient-to-l from-[#141618]/90 via-[#141618]/50 to-transparent" />
-              <div className="relative z-10 ml-auto w-full max-w-md p-8 text-right">
-                <h3 className="mb-2 text-3xl font-bold text-white" style={{ fontFamily: "var(--font-lato)" }}>The Music Workshop</h3>
-                <p className="mb-3 text-sm font-bold uppercase tracking-wider text-[#E21818]">Established in 1993</p>
-                <p className="mb-6 text-sm leading-relaxed text-white/80">The Workshops Series was created to help people of all levels learn about the instruments and gear they can use to make the music they love.</p>
-                <button className="rounded bg-[#E21818] px-6 py-3 text-xs font-bold uppercase text-white hover:bg-[#C51515]">More Info</button>
+              {/* Gradient: transparent 0-45%, fade to solid black at 55%, solid black 55-100% */}
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to right, transparent 0%, transparent 45%, rgba(20,22,24,0.5) 49%, #141618 55%, #141618 100%)" }} />
+              <div className="relative z-10 ml-auto w-1/2 p-8 text-right">
+                <div className="ml-auto max-w-sm">
+                  <h3 className="mb-2 text-3xl font-bold text-white" style={{ fontFamily: "var(--font-lato)" }}>The Music Workshop</h3>
+                  <p className="mb-3 text-sm font-bold uppercase tracking-wider text-[#E21818]">Established in 1993</p>
+                  <p className="mb-6 text-sm leading-relaxed text-white/80">The Workshops Series was created to help people of all levels learn about the instruments and gear they can use to make the music they love.</p>
+                  <button className="rounded bg-[#E21818] px-6 py-3 text-xs font-bold uppercase text-white hover:bg-[#C51515]">More Info</button>
+                </div>
               </div>
             </div>
           </div>
