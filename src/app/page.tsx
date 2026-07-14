@@ -167,7 +167,7 @@ export default function HomePage() {
         </section>
 
         {/* Music Workshop — person LEFT, text RIGHT, fades to dark */}
-        <section className="relative min-h-[500px] overflow-hidden bg-[#1b1b22] flex items-center">
+        <section className="mx-auto max-w-7xl px-4 relative min-h-[500px] overflow-hidden bg-[#1b1b22] flex items-center mt-12 mb-12 rounded-lg">
           <div className="absolute inset-0">
             <img src="/musicplace/images/home/workshop-bg.png" alt="" className="h-full w-full object-cover" style={{ filter: "grayscale(100%) contrast(1.1) brightness(0.8)" }} />
           </div>
