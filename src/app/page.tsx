@@ -224,7 +224,7 @@ export default function HomePage() {
         </section>
 
         {/* Newsletter + Testimonial */}
-        <section className="grid md:grid-cols-2">
+        <section className="mx-auto max-w-7xl px-4 grid md:grid-cols-2">
           <div className="flex flex-col justify-center bg-[#E21818] p-10 md:p-14">
             <h3 className="mb-3 text-2xl font-bold text-white" style={{ fontFamily: "var(--font-lato)" }}>Subscribe to our Newsletter</h3>
             <p className="mb-6 text-sm text-white/85">Subscribe to our newsletter to get latest news about our products, events and sales</p>
