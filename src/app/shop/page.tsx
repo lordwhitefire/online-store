@@ -68,15 +68,17 @@ export default function ShopPage() {
             </div>
 
             {/* RIGHT: Sidebar — shows on right for desktop, below for mobile/tablet */}
+            {/* Sidebar — 1 column on desktop (right side), 2 columns on tablet, 1 column on mobile */}
             <aside className="lg:w-[28%]">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1">
               {/* 1. Cart Widget */}
-              <div className="mb-4 bg-[#1A1C1F] p-4">
+              <div className="bg-[#1A1C1F] p-4">
                 <h3 className="mb-3 border-b border-[#33383D] pb-2 text-sm font-bold uppercase text-white">Cart</h3>
                 <p className="text-xs text-[#9B9C9E]">No products in the cart.</p>
               </div>
 
               {/* 2. Filter by Price */}
-              <div className="mb-4 bg-[#1A1C1F] p-4">
+              <div className="bg-[#1A1C1F] p-4">
                 <h3 className="mb-3 border-b border-[#33383D] pb-2 text-sm font-bold uppercase text-white">Filter by price</h3>
                 <div className="mb-3">
                   <div className="relative h-1 rounded-full bg-[#33383D]">
@@ -90,7 +92,7 @@ export default function ShopPage() {
               </div>
 
               {/* 3. Search for Products */}
-              <div className="mb-4 bg-[#1A1C1F] p-4">
+              <div className="bg-[#1A1C1F] p-4">
                 <h3 className="mb-3 border-b border-[#33383D] pb-2 text-sm font-bold uppercase text-white">Search for products</h3>
                 <div className="flex">
                   <input type="text" placeholder="Search products…" className="flex-1 border border-[#33383D] bg-[#141618] px-3 py-2 text-xs text-white placeholder:text-[#9B9C9E] focus:outline-none" />
@@ -99,7 +101,7 @@ export default function ShopPage() {
               </div>
 
               {/* 4. New Arrivals */}
-              <div className="mb-4 bg-[#1A1C1F] p-4">
+              <div className="bg-[#1A1C1F] p-4">
                 <h3 className="mb-3 border-b border-[#33383D] pb-2 text-sm font-bold uppercase text-white">New Arrivals</h3>
                 <ul className="space-y-3">
                   {newArrivals.map(p => (
@@ -117,7 +119,7 @@ export default function ShopPage() {
               </div>
 
               {/* 5. Featured Products */}
-              <div className="mb-4 bg-[#1A1C1F] p-4">
+              <div className="bg-[#1A1C1F] p-4">
                 <h3 className="mb-3 border-b border-[#33383D] pb-2 text-sm font-bold uppercase text-white">Featured Products</h3>
                 <ul className="space-y-3">
                   {featuredProducts.map(p => (
@@ -147,6 +149,7 @@ export default function ShopPage() {
                     <span key={tag} className="border border-[#33383D] px-2 py-1 text-[10px] uppercase text-[#9B9C9E] hover:border-[#E21818] hover:text-[#E21818] cursor-pointer">{tag}</span>
                   ))}
                 </div>
+              </div>
               </div>
             </aside>
           </div>
