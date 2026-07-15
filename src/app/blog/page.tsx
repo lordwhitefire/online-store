@@ -1,3 +1,4 @@
+
 import { Header } from "@/components/store/Header"
 import { Footer } from "@/components/store/Footer"
 import { getBlogPosts } from "@/lib/data"

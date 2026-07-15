@@ -1,4 +1,5 @@
 "use client"
+
 import { Header } from "@/components/store/Header"
 import { Footer } from "@/components/store/Footer"
 import { ProductCard } from "@/components/store/ProductCard"
