@@ -141,5 +141,7 @@ export function saveImage(filename: string, buffer: Buffer): string {
 // ─── Home Content ───
 
 export function getHomeContent(): any {
-  return getPageData("home-content")
+  const filePath = path.join(DATA_DIR, "home-content.json")
+  if (!fs.existsSync(filePath)) return {}
+  return JSON.parse(fs.readFileSync(filePath, "utf-8"))
 }
