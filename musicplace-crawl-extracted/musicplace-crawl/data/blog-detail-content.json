@@ -1,0 +1,19 @@
+{
+  "title": "Post Formats",
+  "sidebar": {
+    "searchTitle": "Search",
+    "searchPlaceholder": "Search…",
+    "newsTitle": "Latest News",
+    "calendarTitle": "Calendar",
+    "tagsTitle": "Tags",
+    "commentsTitle": "Comments",
+    "socialsTitle": "Socials"
+  },
+  "comments": [
+    { "user": "John Smith", "on": "Adjustable Online Bass Guitar Tuner" },
+    { "user": "Andrew Brown", "on": "How to Tune Your Banjo" },
+    { "user": "Sonya Willis", "on": "Benefits of Playing Music" }
+  ],
+  "tags": ["ACOUSTIC KITS", "COMPANY", "CONCEPT", "CREATIVE", "DRUMS", "ELECTRIC GUITARS", "EVENT", "LIFESTYLE", "MUSIC", "POPULAR", "SALE"],
+  "relatedTitle": "Related Posts"
+}

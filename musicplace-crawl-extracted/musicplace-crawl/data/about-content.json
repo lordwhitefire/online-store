@@ -1,0 +1,22 @@
+{
+  "title": "About Us",
+  "section1Title": "What Makes us Different?",
+  "section1Heading": "The Music Workshop",
+  "section1Subtitle": "Established in 1993",
+  "section1Description": "The Workshops Series was created to help people of all levels learn about the instruments and gear they can use to make the music they love.",
+  "section1Button": "More Info",
+  "section1Image": "/musicplace/images/home/3-2.jpg",
+  "section2Title": "Meet Our Experts",
+  "experts": [
+    { "name": "Douglas Adams", "role": "Manager", "img": "/musicplace/images/our-staff/team-1-270x220.jpg", "bio": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident." },
+    { "name": "Eula Rose", "role": "Manager", "img": "/musicplace/images/our-staff/team-2-270x220.jpg", "bio": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident." }
+  ],
+  "section3Title": "What People Say?",
+  "testimonial": {
+    "quote": "I love this website. It has a great selection of innovative products. I will be a returning customer forever! Especially since the shipping is fast! Very impressed with prices and free shipping. Thank you!",
+    "author": "Kelley Webb",
+    "role": "Singer",
+    "image": "/musicplace/images/home/testi-1-75x75.jpg"
+  },
+  "brands": ["1-1.png", "2-1.png", "3-1.png", "4-1.png", "5-1.png", "6-1.png"]
+}

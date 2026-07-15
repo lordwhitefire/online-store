@@ -1,0 +1,18 @@
+{
+  "title": "Shop",
+  "resultsText": "Showing all {count} results",
+  "sorting": ["Default sorting", "Sort by popularity", "Sort by latest", "Sort by price: low to high", "Sort by price: high to low"],
+  "sidebar": {
+    "cartTitle": "Cart",
+    "cartEmpty": "No products in the cart.",
+    "priceTitle": "Filter by price",
+    "priceRange": "$47 – $1,330",
+    "priceButton": "Filter",
+    "searchTitle": "Search for products",
+    "searchPlaceholder": "Search products…",
+    "arrivalsTitle": "New Arrivals",
+    "featuredTitle": "Featured Products",
+    "tagsTitle": "Tags"
+  },
+  "tags": ["ACOUSTIC KITS", "COMPANY", "CONCEPT", "CREATIVE", "DRUMS", "ELECTRIC GUITARS", "EVENT", "LIFESTYLE", "MUSIC", "POPULAR", "SALE"]
+}

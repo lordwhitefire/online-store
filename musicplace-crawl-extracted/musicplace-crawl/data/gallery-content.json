@@ -1,0 +1,17 @@
+{
+  "title": "Gallery",
+  "images": [
+    { "src": "/musicplace/images/gallery/image-1.jpg", "title": "Live Performance" },
+    { "src": "/musicplace/images/gallery/image-2.jpg", "title": "Studio Session" },
+    { "src": "/musicplace/images/gallery/image-3.jpg", "title": "Guitar Collection" },
+    { "src": "/musicplace/images/gallery/image-4.jpg", "title": "Drum Setup" },
+    { "src": "/musicplace/images/gallery/image-5.jpg", "title": "Keyboard Corner" },
+    { "src": "/musicplace/images/gallery/image-6.jpg", "title": "Recording Booth" },
+    { "src": "/musicplace/images/gallery/image-7.jpg", "title": "Concert Hall" },
+    { "src": "/musicplace/images/gallery/image-8.jpg", "title": "Vinyl Collection" },
+    { "src": "/musicplace/images/gallery/image-9.jpg", "title": "Microphone Array" },
+    { "src": "/musicplace/images/gallery/image-10.jpg", "title": "Band Rehearsal" },
+    { "src": "/musicplace/images/gallery/image-11.jpg", "title": "Music Workshop" },
+    { "src": "/musicplace/images/gallery/image-12.jpg", "title": "Instrument Display" }
+  ]
+}

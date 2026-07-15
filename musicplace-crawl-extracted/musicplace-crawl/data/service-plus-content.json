@@ -1,0 +1,22 @@
+{
+  "title": "Service Plus",
+  "introTitle": "Dear Customers",
+  "introText": [
+    "Welcome to our Service Plus program! We understand that setting up a new website or online store can be overwhelming. That's why we offer comprehensive service packages designed to get your music store up and running quickly and professionally.",
+    "Our team of experienced developers and designers will work with you every step of the way, from initial installation to final customization. Whether you need a simple setup or a full e-commerce solution, we have a package that fits your needs and budget.",
+    "All our services come with a satisfaction guarantee. If you're not happy with the results, we'll work with you until you are. Choose a package below to get started."
+  ],
+  "packagesTitle": "Packages",
+  "packages": [
+    { "name": "Theme Installation", "price": "$49", "features": ["Theme installation", "Demo content setup", "Basic configuration", "1 round of revisions", "48-hour delivery"] },
+    { "name": "Customization", "price": "$199", "features": ["Everything in Theme Installation", "Color & font customization", "Layout adjustments", "3 rounds of revisions", "24-hour delivery", "30-day support"], "featured": true },
+    { "name": "Full Setup", "price": "$499", "features": ["Everything in Customization", "Full website build", "E-commerce setup", "Content migration", "Unlimited revisions", "90-day support", "Priority response"] }
+  ],
+  "contactTitle": "Have Questions?",
+  "contactText": "Contact us anytime and our team will help you choose the right package.",
+  "contactInfo": [
+    { "icon": "mail", "text": "info@swiftideas.net" },
+    { "icon": "phone", "text": "+44 (0) 800 123 4567" },
+    { "icon": "clock", "text": "24/7 Support" }
+  ]
+}

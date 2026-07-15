@@ -1,0 +1,16 @@
+{
+  "title": "Your cart",
+  "emptyMessage": "Your cart is currently empty.",
+  "returnButton": "Return to Shop",
+  "tableHeaders": ["", "Product", "Price", "Quantity", "Total"],
+  "continueShopping": "Continue Shopping",
+  "updateButton": "Update Cart",
+  "totalsTitle": "Cart Totals",
+  "couponLabel": "Coupon code",
+  "couponButton": "Apply Coupon",
+  "subtotalLabel": "Subtotal",
+  "shippingLabel": "Shipping",
+  "shippingValue": "Free",
+  "totalLabel": "Total",
+  "checkoutButton": "Proceed to Checkout"
+}

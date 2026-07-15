@@ -145,3 +145,25 @@ export function getHomeContent(): any {
   if (!fs.existsSync(filePath)) return {}
   return JSON.parse(fs.readFileSync(filePath, "utf-8"))
 }
+
+// ─── Page Content Readers ───
+
+export function getContent(fileName: string): any {
+  const filePath = path.join(DATA_DIR, `${fileName}.json`)
+  if (!fs.existsSync(filePath)) return {}
+  return JSON.parse(fs.readFileSync(filePath, "utf-8"))
+}
+
+export function getShopContent(): any { return getContent("shop-content") }
+export function getSaleContent(): any { return getContent("sale-content") }
+export function getAboutContent(): any { return getContent("about-content") }
+export function getContactContent(): any { return getContent("contact-content") }
+export function getBlogContent(): any { return getContent("blog-content") }
+export function getBlogDetailContent(): any { return getContent("blog-detail-content") }
+export function getGalleryContent(): any { return getContent("gallery-content") }
+export function getServicesContent(): any { return getContent("services-content") }
+export function getStaffContent(): any { return getContent("staff-content") }
+export function getPrivacyContent(): any { return getContent("privacy-policy-content") }
+export function getServicePlusContent(): any { return getContent("service-plus-content") }
+export function getCartContent(): any { return getContent("cart-content") }
+export function getCheckoutContent(): any { return getContent("checkout-content") }

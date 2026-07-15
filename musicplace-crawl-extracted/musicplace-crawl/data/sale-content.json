@@ -1,0 +1,6 @@
+{
+  "title": "Sale",
+  "resultsText": "Showing all {count} results",
+  "sorting": ["Default sorting", "Sort by popularity", "Sort by latest", "Sort by price: low to high", "Sort by price: high to low"],
+  "priceRange": "$349 – $951"
+}
