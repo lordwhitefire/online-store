@@ -2,7 +2,8 @@
 import { Header } from "@/components/store/Header"
 import { Footer } from "@/components/store/Footer"
 import { useState, useEffect, useCallback } from "react"
-import { Package, FileText, FileCode, ShoppingCart, Users, Plus, Edit, Trash2, Search, Save, Upload, X, Check } from "lucide-react"
+import { DollarSign, TrendingUp, Package, Users } from "lucide-react"
+import { FileText, FileCode, ShoppingCart, Plus, Edit, Trash2, Search, Save, Upload, X, Check } from "lucide-react"
 
 interface Product {
   slug: string
@@ -63,6 +64,7 @@ export default function AdminPage() {
   const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null)
   const [editingPage, setEditingPage] = useState<any | null>(null)
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle")
+  const [stats, setStats] = useState({ totalRevenue: "0", totalOrders: 0, completedOrders: 0, pendingOrders: 0, totalProducts: 0, totalCustomers: 0 })
 
   // Load data on mount
   useEffect(() => {
@@ -71,7 +73,14 @@ export default function AdminPage() {
     loadPages()
     loadOrders()
     loadCustomers()
+    loadStats()
   }, [])
+
+  const loadStats = async () => {
+    const res = await fetch("/api/admin/stats")
+    const data = await res.json()
+    setStats(data)
+  }
 
   const loadProducts = async () => {
     const res = await fetch("/api/admin/products")

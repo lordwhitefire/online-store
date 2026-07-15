@@ -111,21 +111,35 @@ export function saveBlogPost(slug: string, data: Partial<BlogPost>): void {
 // ─── Page Data (about, contact, home, etc.) ───
 
 export function getPageData(pageName: string): PageData {
-  const filePath = path.join(DATA_DIR, `${pageName}-info.json`)
-  if (!fs.existsSync(filePath)) return {}
-  return JSON.parse(fs.readFileSync(filePath, "utf-8"))
+  // Try content file first, then info file
+  const contentPath = path.join(DATA_DIR, `${pageName}-content.json`)
+  if (fs.existsSync(contentPath)) return JSON.parse(fs.readFileSync(contentPath, "utf-8"))
+  const infoPath = path.join(DATA_DIR, `${pageName}-info.json`)
+  if (fs.existsSync(infoPath)) return JSON.parse(fs.readFileSync(infoPath, "utf-8"))
+  return {}
 }
 
 export function savePageData(pageName: string, data: PageData): void {
-  const filePath = path.join(DATA_DIR, `${pageName}-info.json`)
+  // Save to content file if it exists, otherwise info file
+  const contentPath = path.join(DATA_DIR, `${pageName}-content.json`)
+  const infoPath = path.join(DATA_DIR, `${pageName}-info.json`)
+  const filePath = fs.existsSync(contentPath) ? contentPath : infoPath
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8")
 }
 
 // ─── List all editable pages ───
 
 export function getAllPageNames(): string[] {
-  const files = fs.readdirSync(DATA_DIR).filter(f => f.endsWith("-info.json"))
-  return files.map(f => f.replace("-info.json", ""))
+  const files = fs.readdirSync(DATA_DIR).filter(f => f.endsWith("-info.json") || f.endsWith("-content.json"))
+  return files.map(f => f.replace(/-(info|content)\.json$/, ""))
+}
+
+export function getPageFileName(pageName: string): string | null {
+  const infoPath = path.join(DATA_DIR, `${pageName}-info.json`)
+  const contentPath = path.join(DATA_DIR, `${pageName}-content.json`)
+  if (fs.existsSync(contentPath)) return `${pageName}-content.json`
+  if (fs.existsSync(infoPath)) return `${pageName}-info.json`
+  return null
 }
 
 // ─── Image upload ───
