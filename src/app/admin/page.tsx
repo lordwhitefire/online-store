@@ -274,9 +274,17 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* PAGE EDITOR */}
+          {/* PAGE EDITOR — uses form editor for content pages, raw JSON for info pages */}
           {tab === "pages" && editingPage && (
-            <PageEditor page={editingPage} onSave={savePage} onCancel={() => setEditingPage(null)} />
+            editingPage.data?.hero ? (
+              <HomeContentEditor page={editingPage} onSave={savePage} onCancel={() => setEditingPage(null)} />
+            ) : editingPage.data?.tiles ? (
+              <HomeContentEditor page={editingPage} onSave={savePage} onCancel={() => setEditingPage(null)} />
+            ) : editingPage.data?.section1Title ? (
+              <GenericContentEditor page={editingPage} onSave={savePage} onCancel={() => setEditingPage(null)} />
+            ) : (
+              <PageEditor page={editingPage} onSave={savePage} onCancel={() => setEditingPage(null)} />
+            )
           )}
 
           {/* ORDERS TAB */}
@@ -413,20 +421,11 @@ function BlogEditor({ post, onSave, onCancel, onUpload }: { post: BlogPost; onSa
 // ─── Page Editor Component (raw JSON editor) ───
 function PageEditor({ page, onSave, onCancel }: { page: { name: string; data: any }; onSave: (name: string, data: any) => void; onCancel: () => void }) {
   const [jsonText, setJsonText] = useState(JSON.stringify(page.data, null, 2))
-
-  const handleSave = () => {
-    try {
-      const parsed = JSON.parse(jsonText)
-      onSave(page.name, parsed)
-    } catch (e) {
-      alert("Invalid JSON: " + (e as Error).message)
-    }
-  }
-
+  const handleSave = () => { try { const parsed = JSON.parse(jsonText); onSave(page.name, parsed) } catch (e) { alert("Invalid JSON: " + (e as Error).message) } }
   return (
     <div className="bg-[#1A1C1F] p-6">
       <div className="mb-4 flex items-center justify-between border-b border-[#33383D] pb-3">
-        <h3 className="text-sm font-bold uppercase text-white">Edit: {page.name}-info.json</h3>
+        <h3 className="text-sm font-bold uppercase text-white">Edit: {page.name}</h3>
         <div className="flex gap-2">
           <button onClick={handleSave} className="flex items-center gap-2 bg-[#E21818] px-4 py-2 text-xs font-bold uppercase text-white hover:bg-[#C51515]"><Save className="h-4 w-4" /> Save</button>
           <button onClick={onCancel} className="flex items-center gap-2 border border-[#33383D] px-4 py-2 text-xs font-bold uppercase text-[#9B9C9E] hover:text-white"><X className="h-4 w-4" /> Cancel</button>
@@ -434,6 +433,221 @@ function PageEditor({ page, onSave, onCancel }: { page: { name: string; data: an
       </div>
       <textarea value={jsonText} onChange={e => setJsonText(e.target.value)} rows={24} className="w-full border border-[#33383D] bg-[#141618] px-3 py-2 text-xs text-white focus:border-[#E21818] focus:outline-none font-mono" />
       <p className="mt-2 text-[10px] text-[#9B9C9E]">Edit the raw JSON. Click Save to write changes to the data folder.</p>
+    </div>
+  )
+}
+
+// ─── Reusable field components ───
+function Field({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string }) {
+  return <div><label className="mb-1 block text-xs text-[#9B9C9E]">{label}</label><input type="text" value={value || ""} onChange={e => onChange(e.target.value)} placeholder={placeholder} className="w-full border border-[#33383D] bg-[#141618] px-3 py-2 text-sm text-white focus:border-[#E21818] focus:outline-none" /></div>
+}
+function TextArea({ label, value, onChange, rows = 3 }: { label: string; value: string; onChange: (v: string) => void; rows?: number }) {
+  return <div className="sm:col-span-2"><label className="mb-1 block text-xs text-[#9B9C9E]">{label}</label><textarea value={value || ""} onChange={e => onChange(e.target.value)} rows={rows} className="w-full border border-[#33383D] bg-[#141618] px-3 py-2 text-sm text-white focus:border-[#E21818] focus:outline-none" /></div>
+}
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="mb-3 mt-6 border-b border-[#33383D] pb-2 text-sm font-bold uppercase text-white first:mt-0">{children}</h3>
+}
+
+// ─── Home Content Editor — dedicated form for home-content.json ───
+function HomeContentEditor({ page, onSave, onCancel }: { page: { name: string; data: any }; onSave: (name: string, data: any) => void; onCancel: () => void }) {
+  const [data, setData] = useState<any>(JSON.parse(JSON.stringify(page.data)))
+  const update = (path: string, value: any) => {
+    const keys = path.split(".")
+    const newData = JSON.parse(JSON.stringify(data))
+    let obj = newData
+    for (let i = 0; i < keys.length - 1; i++) obj = obj[keys[i]]
+    obj[keys[keys.length - 1]] = value
+    setData(newData)
+  }
+  const updateArrayItem = (arrPath: string, index: number, field: string, value: any) => {
+    const keys = arrPath.split(".")
+    const newData = JSON.parse(JSON.stringify(data))
+    let obj = newData
+    for (let i = 0; i < keys.length - 1; i++) obj = obj[keys[i]]
+    obj[keys[keys.length - 1]][index][field] = value
+    setData(newData)
+  }
+  const inputClass = "w-full border border-[#33383D] bg-[#141618] px-3 py-2 text-sm text-white focus:border-[#E21818] focus:outline-none"
+
+  return (
+    <div className="bg-[#1A1C1F] p-6">
+      <div className="mb-4 flex items-center justify-between border-b border-[#33383D] pb-3 sticky top-0 bg-[#1A1C1F] z-10">
+        <h3 className="text-sm font-bold uppercase text-white">Edit Homepage Content</h3>
+        <div className="flex gap-2">
+          <button onClick={() => onSave(page.name, data)} className="flex items-center gap-2 bg-[#E21818] px-4 py-2 text-xs font-bold uppercase text-white hover:bg-[#C51515]"><Save className="h-4 w-4" /> Save All</button>
+          <button onClick={onCancel} className="flex items-center gap-2 border border-[#33383D] px-4 py-2 text-xs font-bold uppercase text-[#9B9C9E] hover:text-white"><X className="h-4 w-4" /> Cancel</button>
+        </div>
+      </div>
+
+      <div className="max-h-[70vh] overflow-y-auto pr-2">
+        {/* Hero Slides */}
+        <SectionTitle>Hero Slide 1 (Person Right, Text Left)</SectionTitle>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Field label="Headline" value={data.hero?.slide1?.headline} onChange={v => update("hero.slide1.headline", v)} />
+          <Field label="Button Text" value={data.hero?.slide1?.buttonText} onChange={v => update("hero.slide1.buttonText", v)} />
+          <TextArea label="Subheadline" value={data.hero?.slide1?.subheadline} onChange={v => update("hero.slide1.subheadline", v)} />
+          <Field label="Button Link" value={data.hero?.slide1?.buttonHref} onChange={v => update("hero.slide1.buttonHref", v)} />
+          <Field label="Image URL" value={data.hero?.slide1?.image} onChange={v => update("hero.slide1.image", v)} />
+        </div>
+
+        <SectionTitle>Hero Slide 2 (Person Left, Text Right)</SectionTitle>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Field label="Headline" value={data.hero?.slide2?.headline} onChange={v => update("hero.slide2.headline", v)} />
+          <Field label="Button Text" value={data.hero?.slide2?.buttonText} onChange={v => update("hero.slide2.buttonText", v)} />
+          <TextArea label="Subheadline" value={data.hero?.slide2?.subheadline} onChange={v => update("hero.slide2.subheadline", v)} />
+          <Field label="Button Link" value={data.hero?.slide2?.buttonHref} onChange={v => update("hero.slide2.buttonHref", v)} />
+          <Field label="Image URL" value={data.hero?.slide2?.image} onChange={v => update("hero.slide2.image", v)} />
+        </div>
+
+        {/* Category Tiles */}
+        <SectionTitle>Category Tiles (4 tiles)</SectionTitle>
+        {data.tiles?.map((tile: any, i: number) => (
+          <div key={i} className="mb-4 border border-[#33383D] p-4">
+            <p className="mb-2 text-xs font-bold text-[#E21818]">Tile {i + 1}</p>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <Field label="Title" value={tile.title} onChange={v => updateArrayItem("tiles", i, "title", v)} />
+              <Field label="Subtitle" value={tile.subtitle} onChange={v => updateArrayItem("tiles", i, "subtitle", v)} />
+              <Field label="Link" value={tile.href} onChange={v => updateArrayItem("tiles", i, "href", v)} />
+              <Field label="Image URL" value={tile.image} onChange={v => updateArrayItem("tiles", i, "image", v)} />
+              <Field label="CTA Text (optional)" value={tile.cta} onChange={v => updateArrayItem("tiles", i, "cta", v)} />
+              <Field label="Description (optional)" value={tile.description} onChange={v => updateArrayItem("tiles", i, "description", v)} />
+            </div>
+          </div>
+        ))}
+
+        {/* Features */}
+        <SectionTitle>Features Strip (4 items)</SectionTitle>
+        {data.features?.map((f: any, i: number) => (
+          <div key={i} className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <Field label={`Icon ${i+1}`} value={f.icon} onChange={v => updateArrayItem("features", i, "icon", v)} />
+            <Field label={`Title ${i+1}`} value={f.title} onChange={v => updateArrayItem("features", i, "title", v)} />
+            <Field label={`Text ${i+1}`} value={f.text} onChange={v => updateArrayItem("features", i, "text", v)} />
+          </div>
+        ))}
+
+        {/* Best Sellers */}
+        <SectionTitle>Best Sellers</SectionTitle>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Field label="Section Title" value={data.bestSellers?.title} onChange={v => update("bestSellers.title", v)} />
+        </div>
+        <p className="mt-2 text-[10px] text-[#9B9C9E]">Product slugs: {data.bestSellers?.productSlugs?.join(", ")}</p>
+
+        {/* Brands */}
+        <SectionTitle>Brand Logos</SectionTitle>
+        {data.brands?.map((brand: string, i: number) => (
+          <div key={i} className="mb-2"><Field label={`Brand ${i+1}`} value={brand} onChange={v => { const newBrands = [...data.brands]; newBrands[i] = v; setData({ ...data, brands: newBrands }) }} /></div>
+        ))}
+
+        {/* Promo Banners */}
+        <SectionTitle>Promo Banners (3 banners)</SectionTitle>
+        {data.promos?.map((promo: any, i: number) => (
+          <div key={i} className="mb-4 border border-[#33383D] p-4">
+            <p className="mb-2 text-xs font-bold text-[#E21818]">Banner {i + 1}</p>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <Field label="Title" value={promo.title} onChange={v => updateArrayItem("promos", i, "title", v)} />
+              <Field label="Subtitle" value={promo.subtitle} onChange={v => updateArrayItem("promos", i, "subtitle", v)} />
+              <Field label="Badge (optional)" value={promo.badge} onChange={v => updateArrayItem("promos", i, "badge", v)} />
+              <Field label="CTA Text" value={promo.ctaText} onChange={v => updateArrayItem("promos", i, "ctaText", v)} />
+              <Field label="CTA Link" value={promo.ctaHref} onChange={v => updateArrayItem("promos", i, "ctaHref", v)} />
+              <Field label="Image URL" value={promo.image} onChange={v => updateArrayItem("promos", i, "image", v)} />
+            </div>
+          </div>
+        ))}
+
+        {/* Featured Items */}
+        <SectionTitle>Featured Items</SectionTitle>
+        <Field label="Section Title" value={data.featured?.title} onChange={v => update("featured.title", v)} />
+
+        {/* Music Workshop */}
+        <SectionTitle>Music Workshop</SectionTitle>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Field label="Title" value={data.workshop?.title} onChange={v => update("workshop.title", v)} />
+          <Field label="Subtitle" value={data.workshop?.subtitle} onChange={v => update("workshop.subtitle", v)} />
+          <Field label="Primary Button" value={data.workshop?.primaryButton} onChange={v => update("workshop.primaryButton", v)} />
+          <Field label="Secondary Button" value={data.workshop?.secondaryButton} onChange={v => update("workshop.secondaryButton", v)} />
+          <TextArea label="Description" value={data.workshop?.description} onChange={v => update("workshop.description", v)} />
+          <Field label="Image URL" value={data.workshop?.image} onChange={v => update("workshop.image", v)} />
+        </div>
+
+        {/* What's New */}
+        <SectionTitle>What's New</SectionTitle>
+        <Field label="Section Title" value={data.whatsNew?.title} onChange={v => update("whatsNew.title", v)} />
+
+        {/* Newsletter */}
+        <SectionTitle>Newsletter</SectionTitle>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Field label="Title" value={data.newsletter?.title} onChange={v => update("newsletter.title", v)} />
+          <Field label="Placeholder" value={data.newsletter?.placeholder} onChange={v => update("newsletter.placeholder", v)} />
+          <Field label="Button Text" value={data.newsletter?.buttonText} onChange={v => update("newsletter.buttonText", v)} />
+          <TextArea label="Description" value={data.newsletter?.description} onChange={v => update("newsletter.description", v)} />
+        </div>
+
+        {/* Testimonial */}
+        <SectionTitle>Testimonial</SectionTitle>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Field label="Author" value={data.testimonial?.author} onChange={v => update("testimonial.author", v)} />
+          <Field label="Role" value={data.testimonial?.role} onChange={v => update("testimonial.role", v)} />
+          <Field label="Image URL" value={data.testimonial?.image} onChange={v => update("testimonial.image", v)} />
+          <TextArea label="Quote" value={data.testimonial?.quote} onChange={v => update("testimonial.quote", v)} />
+        </div>
+
+        {/* Footer */}
+        <SectionTitle>Footer</SectionTitle>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Field label="Featured Title" value={data.footer?.featuredTitle} onChange={v => update("footer.featuredTitle", v)} />
+          <Field label="Reviews Title" value={data.footer?.reviewsTitle} onChange={v => update("footer.reviewsTitle", v)} />
+          <Field label="Arrivals Title" value={data.footer?.arrivalsTitle} onChange={v => update("footer.arrivalsTitle", v)} />
+          <Field label="Ad Title" value={data.footer?.adTitle} onChange={v => update("footer.adTitle", v)} />
+          <Field label="Ad Link" value={data.footer?.adHref} onChange={v => update("footer.adHref", v)} />
+          <Field label="Ad Image" value={data.footer?.adImage} onChange={v => update("footer.adImage", v)} />
+        </div>
+      </div>
+
+      {/* Sticky save bar at bottom */}
+      <div className="mt-4 flex justify-end gap-2 border-t border-[#33383D] pt-4">
+        <button onClick={() => onSave(page.name, data)} className="flex items-center gap-2 bg-[#E21818] px-6 py-2 text-xs font-bold uppercase text-white hover:bg-[#C51515]"><Save className="h-4 w-4" /> Save All Changes</button>
+        <button onClick={onCancel} className="flex items-center gap-2 border border-[#33383D] px-4 py-2 text-xs font-bold uppercase text-[#9B9C9E] hover:text-white"><X className="h-4 w-4" /> Cancel</button>
+      </div>
+    </div>
+  )
+}
+
+// ─── Generic Content Editor — for pages with section1Title, section2Title etc ───
+function GenericContentEditor({ page, onSave, onCancel }: { page: { name: string; data: any }; onSave: (name: string, data: any) => void; onCancel: () => void }) {
+  const [data, setData] = useState<any>(JSON.parse(JSON.stringify(page.data)))
+
+  const renderField = (key: string, value: any, path: string = "") => {
+    const fullPath = path ? `${path}.${key}` : key
+    if (typeof value === "string" && value.length > 60) {
+      return <div key={key} className="sm:col-span-2"><label className="mb-1 block text-xs text-[#9B9C9E]">{key}</label><textarea value={value} onChange={e => { const newData = JSON.parse(JSON.stringify(data)); const keys = fullPath.split("."); let obj = newData; for (let i = 0; i < keys.length - 1; i++) obj = obj[keys[i]]; obj[keys[keys.length - 1]] = e.target.value; setData(newData) }} rows={3} className="w-full border border-[#33383D] bg-[#141618] px-3 py-2 text-sm text-white focus:border-[#E21818] focus:outline-none" /></div>
+    } else if (typeof value === "string") {
+      return <div key={key}><label className="mb-1 block text-xs text-[#9B9C9E]">{key}</label><input type="text" value={value} onChange={e => { const newData = JSON.parse(JSON.stringify(data)); const keys = fullPath.split("."); let obj = newData; for (let i = 0; i < keys.length - 1; i++) obj = obj[keys[i]]; obj[keys[keys.length - 1]] = e.target.value; setData(newData) }} className="w-full border border-[#33383D] bg-[#141618] px-3 py-2 text-sm text-white focus:border-[#E21818] focus:outline-none" /></div>
+    } else if (Array.isArray(value)) {
+      return <div key={key} className="sm:col-span-2"><p className="mb-1 text-xs font-bold text-[#9B9C9E]">{key} ({value.length} items)</p><div className="space-y-2">{value.map((item: any, i: number) => <div key={i} className="border border-[#33383D] p-3 text-xs text-[#9B9C9E]">{typeof item === "string" ? item : JSON.stringify(item).substring(0, 100) + "..."}</div>)}</div></div>
+    } else if (typeof value === "object" && value !== null) {
+      return <div key={key} className="sm:col-span-2 border border-[#33383D] p-3"><p className="mb-2 text-xs font-bold text-[#E21818]">{key}</p><div className="grid grid-cols-1 gap-2 sm:grid-cols-2">{Object.entries(value).map(([k, v]) => renderField(k, v, fullPath))}</div></div>
+    }
+    return null
+  }
+
+  return (
+    <div className="bg-[#1A1C1F] p-6">
+      <div className="mb-4 flex items-center justify-between border-b border-[#33383D] pb-3 sticky top-0 bg-[#1A1C1F] z-10">
+        <h3 className="text-sm font-bold uppercase text-white">Edit: {page.name}</h3>
+        <div className="flex gap-2">
+          <button onClick={() => onSave(page.name, data)} className="flex items-center gap-2 bg-[#E21818] px-4 py-2 text-xs font-bold uppercase text-white hover:bg-[#C51515]"><Save className="h-4 w-4" /> Save</button>
+          <button onClick={onCancel} className="flex items-center gap-2 border border-[#33383D] px-4 py-2 text-xs font-bold uppercase text-[#9B9C9E] hover:text-white"><X className="h-4 w-4" /> Cancel</button>
+        </div>
+      </div>
+      <div className="max-h-[70vh] overflow-y-auto pr-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {Object.entries(data).map(([key, value]) => renderField(key, value))}
+        </div>
+      </div>
+      <div className="mt-4 flex justify-end gap-2 border-t border-[#33383D] pt-4">
+        <button onClick={() => onSave(page.name, data)} className="flex items-center gap-2 bg-[#E21818] px-6 py-2 text-xs font-bold uppercase text-white hover:bg-[#C51515]"><Save className="h-4 w-4" /> Save All Changes</button>
+        <button onClick={onCancel} className="flex items-center gap-2 border border-[#33383D] px-4 py-2 text-xs font-bold uppercase text-[#9B9C9E] hover:text-white"><X className="h-4 w-4" /> Cancel</button>
+      </div>
     </div>
   )
 }
