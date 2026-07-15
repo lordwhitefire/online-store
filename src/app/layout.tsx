@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Hind, Lato } from "next/font/google"
 import "./globals.css"
 import { ClerkProvider } from "@clerk/nextjs"
+import { ToastContainer } from "@/components/store/Toast"
 
 const hind = Hind({ subsets: ["latin"], variable: "--font-hind", weight: ["300", "400", "600", "700"] })
 const lato = Lato({ subsets: ["latin"], variable: "--font-lato", weight: ["300", "400", "700"] })
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <body className="font-sans antialiased">
           <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:left-0 focus:top-0 focus:z-[100] focus:bg-[#E21818] focus:px-4 focus:py-2 focus:text-white">Skip to main content</a>
           {children}
+          <ToastContainer />
         </body>
       </html>
     </ClerkProvider>

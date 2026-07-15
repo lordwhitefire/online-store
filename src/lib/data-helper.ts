@@ -167,3 +167,37 @@ export function getPrivacyContent(): any { return getContent("privacy-policy-con
 export function getServicePlusContent(): any { return getContent("service-plus-content") }
 export function getCartContent(): any { return getContent("cart-content") }
 export function getCheckoutContent(): any { return getContent("checkout-content") }
+
+// ─── Soft Delete ───
+
+export function softDeleteProduct(slug: string): void {
+  const dataDir = path.join(DATA_DIR, "products")
+  const trashDir = path.join(DATA_DIR, "products", "_trash")
+  if (!fs.existsSync(trashDir)) fs.mkdirSync(trashDir, { recursive: true })
+  const src = path.join(dataDir, `${slug}.json`)
+  const dest = path.join(trashDir, `${slug}.json`)
+  if (fs.existsSync(src)) {
+    fs.renameSync(src, dest)
+  }
+}
+
+export function restoreProduct(slug: string): void {
+  const dataDir = path.join(DATA_DIR, "products")
+  const trashDir = path.join(dataDir, "_trash")
+  const src = path.join(trashDir, `${slug}.json`)
+  const dest = path.join(dataDir, `${slug}.json`)
+  if (fs.existsSync(src)) {
+    fs.renameSync(src, dest)
+  }
+}
+
+export function getDeletedProducts(): Product[] {
+  const trashDir = path.join(DATA_DIR, "products", "_trash")
+  if (!fs.existsSync(trashDir)) return []
+  const files = fs.readdirSync(trashDir).filter(f => f.endsWith(".json"))
+  return files.map(f => {
+    const slug = f.replace(".json", "")
+    const data = JSON.parse(fs.readFileSync(path.join(trashDir, f), "utf-8"))
+    return { ...data, slug }
+  })
+}

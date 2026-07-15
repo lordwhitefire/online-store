@@ -1,0 +1,21 @@
+/* Design Tokens — imported by globals.css */
+:root {
+  --color-bg: #141618;
+  --color-bg-secondary: #1A1C1F;
+  --color-bg-tertiary: #222628;
+  --color-border: #33383D;
+  --color-text: #FFFFFF;
+  --color-text-muted: #9B9C9E;
+  --color-accent: #E21818;
+  --color-accent-hover: #C51515;
+  --color-success: #22c55e;
+  --color-warning: #eab308;
+  --color-error: #ef4444;
+  --font-heading: var(--font-lato);
+  --font-body: var(--font-hind);
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --shadow-card: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-hover: 0 8px 20px rgba(0,0,0,0.4);
+}

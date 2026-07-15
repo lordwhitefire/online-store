@@ -22,3 +22,4 @@ scripts/screenshot*.js
 
 # clerk configuration (can include secrets)
 /.clerk/
+.prettierrcignore
