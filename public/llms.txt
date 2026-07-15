@@ -1,0 +1,65 @@
+# Music Place
+
+> Professional music equipment store. Instruments, recording gear, DJ equipment, and accessories. Serving musicians since 1993.
+
+## About
+
+Music Place is an e-commerce store specializing in professional music instruments and audio equipment. We offer guitars, drums, keyboards, recording equipment, DJ gear, headphones, microphones, and turntables. Free shipping on orders over $100. 30-day return policy.
+
+## Products
+
+We sell musical instruments and audio equipment across 17 categories:
+- Accessories, Audio Interfaces, Audio Workstations, Bags & Cases
+- Band & Orchestra, Controllers, DJ & Karaoke, Headphones
+- Instruments, MIDI Controllers, MIDI Interfaces, Mixers
+- Mouthpieces, Orchestral Strings, Recording, Software, Turntables
+
+Each product includes: name, price, SKU, categories, tags, description, stock status, and rating.
+
+## Pages
+
+- [Home](/) — Homepage with featured products, categories, and promotions
+- [Shop](/shop) — Full product catalog with search, filtering, and sorting
+- [Sale](/sale) — Sale items with discounted prices
+- [Blog](/blog) — Articles about music equipment and instruments
+- [About Us](/about) — Company history and team
+- [Contact](/contact) — Contact form, address, phone, email
+- [Gallery](/gallery) — Photo gallery
+- [Services](/services) — Music lessons, repairs, studio rental
+- [Staff](/staff) — Meet our team
+- [Privacy Policy](/privacy-policy) — Data privacy information
+- [Service Plus](/service-plus) — Website setup packages
+- [Cart](/cart) — Shopping cart
+- [Checkout](/checkout) — Secure checkout with billing and shipping
+
+## API Endpoints
+
+- `GET /api/search?q=&minPrice=&maxPrice=&category=&sort=` — Search and filter products
+- `GET /api/products` — List all products
+- `GET /api/orders` — List orders (admin)
+- `POST /api/orders` — Create order
+- `GET /api/customers` — List customers (admin)
+- `POST /api/customers` — Create/update customer
+
+## Technical Stack
+
+- Frontend: Next.js 16, React, TypeScript, Tailwind CSS
+- Backend: Next.js API Routes
+- Database: Neon PostgreSQL (orders, customers)
+- Content: JSON files in data folder (products, blog, page content)
+- Auth: Clerk
+- ORM: Prisma
+
+## Contact
+
+- Email: info@swiftideas.net
+- Phone: +44 (0) 800 123 4567
+- Address: No.1 Abbey Road, London, W1 ECH, UK
+- Hours: Open Hours on the 24th, 11am to 5pm
+
+## Policies
+
+- Free shipping on orders over $100
+- 30-day return policy
+- Secure payment processing
+- Privacy policy available at /privacy-policy

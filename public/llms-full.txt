@@ -1,0 +1,76 @@
+# Music Place — Full Documentation for AI Models
+
+## Site Overview
+
+Music Place is a professional music equipment e-commerce store built with Next.js 16. The site features 34 products across 17 categories, 9 blog posts, and 19 page routes. All content is stored in JSON files in the data folder, making it easily editable via the admin panel.
+
+## Product Categories
+
+1. **Accessories** — Cables, stands, cases, power supplies
+2. **Audio Interfaces** — USB and Thunderbolt audio interfaces
+3. **Audio Workstations** — Digital audio workstations and software
+4. **Bags & Cases** — Instrument cases and gig bags
+5. **Band & Orchestra** — Brass, woodwind, and orchestral instruments
+6. **Controllers** — DJ controllers and MIDI controllers
+7. **DJ & Karaoke** — Turntables, mixers, DJ equipment
+8. **Headphones** — Studio, DJ, and consumer headphones
+9. **Instruments** — Guitars, basses, drums, keyboards
+10. **MIDI Controllers** — MIDI keyboards, pad controllers
+11. **MIDI Interfaces** — MIDI interfaces and sync devices
+12. **Mixers** — Audio mixers and recording mixers
+13. **Mouthpieces** — Brass and woodwind mouthpieces
+14. **Orchestral Strings** — Violins, violas, cellos, basses
+15. **Recording** — Microphones, preamps, recording equipment
+16. **Software** — DAWs, plugins, music software
+17. **Turntables** — Record players and DJ turntables
+
+## Product Data Structure
+
+Each product JSON file contains:
+- `name` — Product name
+- `price` — Price (may include HTML from WooCommerce)
+- `sku` — Stock keeping unit
+- `categories` — Array of category names
+- `tags` — Array of tags
+- `shortDescription` — Brief description
+- `fullDescription` — Full HTML description
+- `stock` — Stock status
+- `rating` — Product rating
+- `mainImage` — Main product image URL
+- `galleryImages` — Array of additional image URLs
+
+## Admin Panel
+
+The admin panel at /admin provides:
+- Product management (add, edit, delete, image upload)
+- Blog post management
+- Page content editing (all JSON files)
+- Order viewing
+- Customer management
+
+## Search and Filtering
+
+The /api/search endpoint supports:
+- Text search (product name, categories, tags)
+- Price range filtering (minPrice, maxPrice)
+- Category filtering
+- Sorting (default, price-asc, price-desc, name)
+
+## Authentication
+
+Clerk authentication protects the admin panel. Regular browsing and shopping do not require login.
+
+## Database
+
+Neon PostgreSQL stores:
+- Orders (customer info, items, totals, status)
+- Customers (email, name, address, order history)
+- Order items (product info, quantity, price)
+
+## Responsive Design
+
+The site is tested at 4 screen sizes:
+- Desktop: 1440px
+- Laptop: 1080px
+- Tablet: 720px
+- Mobile: 375px
