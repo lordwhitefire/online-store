@@ -1,0 +1,75 @@
+{
+  "hero": {
+    "slide1": {
+      "headline": "The Headphones You Want.",
+      "subheadline": "Rest assured you're getting some of the best headphones available with our selection of Top Recommended.",
+      "buttonText": "View More",
+      "buttonHref": "/category/headphones",
+      "image": "/musicplace/hero-original.jpg"
+    },
+    "slide2": {
+      "headline": "Headphones & Headsets Accessories.",
+      "subheadline": "You are looking for a spare part or accessory for your headphone or headset? Click here to get your original headphones spare part.",
+      "buttonText": "Shop Now",
+      "buttonHref": "/category/headphones",
+      "image": "/musicplace/hero-slide2.jpg"
+    }
+  },
+  "tiles": [
+    { "subtitle": "Keyboards & Digital Pianos", "title": "New In Keyboards", "href": "/category/midi-controllers", "image": "/musicplace/images/home/tile-keyboard.png" },
+    { "subtitle": "Microphones & Gear", "title": "Musician's Lifestyle", "href": "/category/audio-interfaces", "image": "/musicplace/images/home/tile-mic.png", "cta": "Shop Now" },
+    { "subtitle": "", "title": "Shop Accessories", "href": "/category/accessories", "image": "/musicplace/images/home/tile-cables.png" },
+    { "subtitle": "", "title": "Mega Sale", "description": "On Every Brand", "href": "/sale", "bgColor": "#E21818", "cta": "Shop Now" }
+  ],
+  "features": [
+    { "icon": "truck", "title": "Free Shipping", "text": "On orders over $100" },
+    { "icon": "shield", "title": "Secure Payment", "text": "100% protected" },
+    { "icon": "headphones", "title": "24/7 Support", "text": "123-456-7890" },
+    { "icon": "refresh", "title": "Easy Returns", "text": "30-day return policy" }
+  ],
+  "bestSellers": {
+    "title": "Best Sellers",
+    "productSlugs": ["handcrafted-wood-acoustic-violin", "plastic-trumpet-white", "gibson-2016-t-les-paul-studio-50-s-tribu", "meinl-cymbals-arena-marching-cymbals-pai"]
+  },
+  "brands": ["TATES", "OKOLO SPORT", "THE QUOTEZONE", "JØRGEN GROTDAL", "TRACT", "FAMOUSTHEORY"],
+  "promos": [
+    { "title": "Save Up To 30%", "subtitle": "On Select Recording Accessories", "ctaText": "Shop Now", "ctaHref": "/category/recording", "image": "/musicplace/images/home/promo-band.png" },
+    { "badge": "Sale!", "image": "/musicplace/images/home/promo-marshall.png" },
+    { "subtitle": "Recording Solutions", "title": "Plug-And-Play Recording At Home", "image": "/musicplace/images/home/promo-studio.png" }
+  ],
+  "featured": {
+    "title": "Featured Items",
+    "productSlugs": ["handcrafted-blue-acoustic-violin", "hercules-ds513bb-2-trumpet", "gibson-custom-l5-premier-acoustic-guitar", "barrington-br-fr401-double-french-horn"]
+  },
+  "workshop": {
+    "title": "Music Workshop",
+    "subtitle": "Free Workhops and Classes",
+    "description": "The Workshops Series was created to help people of all levels learn about the instruments and gear they can use to make the music they love.",
+    "primaryButton": "Register Now",
+    "secondaryButton": "Play Video",
+    "image": "/musicplace/images/home/workshop-bg.png"
+  },
+  "whatsNew": {
+    "title": "What's New"
+  },
+  "newsletter": {
+    "title": "Subscribe to our Newsletter",
+    "description": "Subscribe to our newsletter to get latest news about our products, events and sales",
+    "placeholder": "Enter your email",
+    "buttonText": "Subscribe"
+  },
+  "testimonial": {
+    "quote": "I have purchased several items from this store — guitars, amps, microphones — and every single time the service is excellent, the shipping is fast, and the products are top quality. Highly recommended for any musician.",
+    "author": "Kelley Webb",
+    "role": "Signer",
+    "image": "/musicplace/images/home/testi-1-75x75.jpg"
+  },
+  "footer": {
+    "featuredTitle": "Featured Items",
+    "reviewsTitle": "Recent Reviews",
+    "arrivalsTitle": "New Arrivals",
+    "adTitle": "Professional Headphones",
+    "adHref": "/category/headphones",
+    "adImage": "/musicplace/images/home/2-1.jpg"
+  }
+}

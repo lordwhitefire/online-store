@@ -137,3 +137,9 @@ export function saveImage(filename: string, buffer: Buffer): string {
   fs.writeFileSync(filePath, buffer)
   return `/uploads/${filename}`
 }
+
+// ─── Home Content ───
+
+export function getHomeContent(): any {
+  return getPageData("home-content")
+}
