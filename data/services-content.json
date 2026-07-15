@@ -1,0 +1,25 @@
+{
+  "title": "Our Services",
+  "section1Title": "Services We Offer",
+  "services": [
+    { "icon": "music", "title": "Music Lessons", "desc": "Professional instruction for all instruments and skill levels, from beginner to advanced." },
+    { "icon": "wrench", "title": "Instrument Repair", "desc": "Expert repair services for guitars, drums, keyboards, brass, and woodwind instruments." },
+    { "icon": "truck", "title": "Fast Delivery", "desc": "Free shipping on all orders over $100. Same-day delivery available in select areas." },
+    { "icon": "headphones", "title": "Studio Rental", "desc": "Fully equipped recording studios available for hourly, daily, or monthly rental." },
+    { "icon": "award", "title": "Quality Guarantee", "desc": "Every product comes with our 30-day satisfaction guarantee and manufacturer warranty." },
+    { "icon": "clock", "title": "24/7 Support", "desc": "Round-the-clock customer support via phone, email, and live chat for all your needs." }
+  ],
+  "section2Title": "Price Table",
+  "pricing": [
+    { "name": "Basic", "price": "$49", "period": "/month", "features": ["1 music lesson/week", "Email support", "5% discount on products", "Newsletter access"] },
+    { "name": "Professional", "price": "$99", "period": "/month", "features": ["3 music lessons/week", "Priority phone support", "15% discount on products", "Free studio time (2hrs/mo)", "Repair service discount"], "featured": true },
+    { "name": "Premium", "price": "$199", "period": "/month", "features": ["Unlimited lessons", "24/7 dedicated support", "25% discount on products", "Unlimited studio time", "Free repairs", "Early access to new gear"] }
+  ],
+  "section3Title": "What People Say?",
+  "testimonial": {
+    "quote": "The service team helped me find the perfect setup for my home studio. Their expertise and patience made all the difference. I will definitely be back!",
+    "author": "Kelley Webb",
+    "role": "Singer",
+    "image": "/musicplace/images/home/testi-2-75x75.jpg"
+  }
+}

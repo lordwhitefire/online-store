@@ -1,0 +1,18 @@
+{
+  "title": "Privacy Policy",
+  "lastUpdated": "July 14, 2026",
+  "sections": [
+    { "num": "1", "title": "Information We Collect", "content": "We collect information you provide directly to us, such as when you create an account, make a purchase, subscribe to our newsletter, or contact customer support. This may include your name, email address, shipping address, phone number, and payment information." },
+    { "num": "2", "title": "How We Use Your Information", "content": "We use the information we collect to process transactions, send order confirmations, provide customer support, send marketing communications (with your consent), improve our products and services, and comply with legal obligations." },
+    { "num": "3", "title": "Embedded Content", "content": "Our website may contain embedded content from third-party providers such as YouTube, Google Maps, and social media platforms. These providers may collect data about your interactions with their embedded content." },
+    { "num": "4", "title": "Cookies", "content": "We use cookies and similar tracking technologies to track activity on our website and store certain information. Cookies are small files that may be used to provide a better user experience and analyze website traffic." },
+    { "num": "5", "title": "Data Access", "content": "You have the right to access the personal information we hold about you, request a copy of your data, and request that we correct or delete your personal information, subject to applicable laws." },
+    { "num": "6", "title": "Data Retention", "content": "We retain your personal information for as long as necessary to fulfill the purposes outlined in this policy, comply with legal obligations, resolve disputes, and enforce our agreements." },
+    { "num": "7", "title": "Data Security", "content": "We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the internet is 100% secure." },
+    { "num": "8", "title": "Your Rights", "content": "Depending on your location, you may have rights regarding your personal information, including the right to access, correct, delete, or restrict the processing of your data. You may also have the right to data portability." },
+    { "num": "9", "title": "Third-Party Services", "content": "We may use third-party service providers to help us operate our website, process payments, and deliver products. These providers have access to your personal information only to perform specific tasks on our behalf." },
+    { "num": "10", "title": "Children's Privacy", "content": "Our website is not directed to children under the age of 13. We do not knowingly collect personal information from children. If you believe we have collected information from a child, please contact us immediately." },
+    { "num": "11", "title": "Changes to This Policy", "content": "We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the effective date at the top." },
+    { "num": "12", "title": "Contact Us", "content": "If you have any questions about this privacy policy or our data practices, please contact us at: info@swiftideas.net or +44 (0) 800 123 4567." }
+  ]
+}

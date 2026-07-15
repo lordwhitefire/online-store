@@ -1,0 +1,32 @@
+{
+  "title": "Checkout",
+  "billingTitle": "Billing Details",
+  "fields": [
+    { "name": "firstName", "label": "First Name *", "type": "text", "required": true, "col": 1 },
+    { "name": "lastName", "label": "Last Name *", "type": "text", "required": true, "col": 2 },
+    { "name": "country", "label": "Country *", "type": "select", "options": ["Nigeria", "United States", "United Kingdom", "Other"], "required": true, "col": "full" },
+    { "name": "address", "label": "Street Address *", "type": "text", "placeholder": "House number and street name", "required": true, "col": "full" },
+    { "name": "city", "label": "Town/City *", "type": "text", "required": true, "col": 1 },
+    { "name": "phone", "label": "Phone *", "type": "tel", "required": true, "col": 2 },
+    { "name": "email", "label": "Email *", "type": "email", "required": true, "col": 2 }
+  ],
+  "shippingTitle": "Shipping Method",
+  "shippingOptions": [
+    { "label": "Flat Rate", "price": "Free" },
+    { "label": "Local Pickup", "price": "$10.00" }
+  ],
+  "paymentTitle": "Payment Method",
+  "paymentOptions": ["Credit/Debit Card", "Bank Transfer", "Cash on Delivery"],
+  "orderTitle": "Your Order",
+  "subtotalLabel": "Subtotal",
+  "shippingLabel": "Shipping",
+  "totalLabel": "Total",
+  "placeOrderButton": "Place Order",
+  "securityNote": "Your payment information is encrypted and secure.",
+  "emptyMessage": "Your cart is currently empty.",
+  "returnButton": "Return to Shop",
+  "successTitle": "Order Placed!",
+  "successMessage": "Your order number is",
+  "successDesc": "A confirmation email has been sent. You can track your order in your account.",
+  "continueButton": "Continue Shopping"
+}

@@ -11,7 +11,7 @@
 import fs from "fs"
 import path from "path"
 
-const DATA_DIR = path.join(process.cwd(), "musicplace-crawl-extracted", "musicplace-crawl", "data")
+const DATA_DIR = path.join(process.cwd(), "data")
 
 // ─── Types ───
 

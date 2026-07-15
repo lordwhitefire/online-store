@@ -29,7 +29,7 @@ export interface BlogPost {
   image: string
 }
 
-const DATA_DIR = path.join(process.cwd(), "musicplace-crawl-extracted", "musicplace-crawl", "data")
+const DATA_DIR = path.join(process.cwd(), "data")
 
 function loadProducts(): Product[] {
   try {

@@ -1,0 +1,20 @@
+{
+  "title": "Contacts",
+  "infoTitle": "Contact Info",
+  "info": [
+    { "label": "Address", "value": "No.1 Abbey Road, London, W1 ECH, UK" },
+    { "label": "We Are Open", "value": "Open Hours on the 24th, - 11am to 5pm" },
+    { "label": "Call", "value": "+44 (0) 800 123 4567" },
+    { "label": "Email", "value": "info@swiftideas.net" }
+  ],
+  "infoText": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+  "socialTitle": "Stay Social",
+  "formTitle": "Leave a Comment",
+  "formFields": [
+    { "name": "name", "label": "Name *", "type": "text", "required": true },
+    { "name": "email", "label": "E-mail *", "type": "email", "required": true },
+    { "name": "subject", "label": "Subject", "type": "text", "required": false },
+    { "name": "message", "label": "Message", "type": "textarea", "required": false }
+  ],
+  "formButton": "Send Message"
+}
