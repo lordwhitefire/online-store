@@ -10,7 +10,7 @@ export function Footer() {
           {[
             { label: "Home", href: "/" },
             { label: "About Us", href: "/about" },
-            { label: "Our Services", href: "/our-services" },
+            { label: "Our Services", href: "/services" },
             { label: "Shop", href: "/shop" },
             { label: "News", href: "/blog" },
             { label: "Contacts", href: "/contact" },
